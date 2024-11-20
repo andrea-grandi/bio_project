@@ -1,2 +1,2 @@
-# ai_in_bio_project
+# bio_project
 Artificial Intelligence in Bioinformatics Project
