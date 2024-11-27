@@ -44,7 +44,7 @@ def save_file(request_id, request_file_part):
 
 @app.route(router + '/hello', methods=['GET'])
 def hello():
-    return 'Hello from bio_project!'
+    return 'Hey from bio_project!'
 
 
 @app.route(router + '/predict', methods=['GET', 'POST'])
