@@ -1,32 +1,3 @@
-# https://youtu.be/tNfcvgPKgyU
-"""
-Here, we use openslide to read a whole slide image. 
-We will then extract a lower reolution version of the image to normalize it
-and then to extract H and E signals separately. 
-
-We will also perform the exact operation on the entire whole slide image by 
-extracting tilee, processing them, and saving processed images separately. 
-
-Please note that this code will not cover putting tiles back into a 
-whole slide image (image pyramid). You can explore pyvips or similar package
-to put together tiles into an image pyramid. 
-
-For an introduction to openslide, please watch video 266: https://youtu.be/QntLBvUZR5c
-    
-For details about H&E normalization, please watch my video 122: https://youtu.be/yUrwEYgZUsA
-    
-Useful references:
-A method for normalizing histology slides for quantitative analysis. M. Macenko et al., ISBI 2009
-http://wwwx.cs.unc.edu/~mn/sites/default/files/macenko2009.pdf
-
-Efficient nucleus detector in histopathology images. J.P. Vink et al., J Microscopy, 2013
-
-Other useful references:
-https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5226799/
-https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0169875
-
-"""
-
 #import pyvips
 from openslide import open_slide
 from PIL import Image
@@ -44,7 +15,6 @@ slide = open_slide("/Users/andreagrandi/Developer/bio_project/src/bio_project/da
 #Extracting a small region and processing it
 
 #Load a level image, normalize the image and digitally extract H and E images
-#As described in video 122: https://www.youtube.com/watch?v=yUrwEYgZUsA
 from normalize_HnE import norm_HnE
 
 #Extract a small region from the large file (level 0)

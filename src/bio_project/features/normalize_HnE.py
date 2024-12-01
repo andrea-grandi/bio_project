@@ -1,6 +1,3 @@
-# https://youtu.be/tNfcvgPKgyU
-
-# Original video on H&E topic: https://youtu.be/yUrwEYgZUsA
 """
 This code normalizes staining appearance of H&E stained images.
 It also separates the hematoxylin and eosing stains in to different images. 
