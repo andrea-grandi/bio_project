@@ -98,3 +98,6 @@ target/
 # WSI images
 *.svs
 *.tiff
+
+# images
+*.png
