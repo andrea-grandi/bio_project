@@ -30,7 +30,7 @@ from matplotlib import pyplot as plt
 import tifffile as tiff
 
 #Load the slide file (svs) into an object.
-slide = open_slide("/Users/andreagrandi/Developer/bio_project/src/bio_project/data/test_wsi/whole_slide_image.svs")
+slide = open_slide("/Users/andreagrandi/Developer/bio_project/src/bio_project/data/images/whole_slide_image.svs")
 
 # slide_props = slide.properties
 # print(slide_props)
@@ -81,7 +81,7 @@ plt.show()
 
 ################################################################
 #For blank it throws an Eigenvalues error.
-blank = tiff.imread("images/saved_tiles/original_tiles/blank/0_0_original.tif")
+blank = tiff.imread("../data/images/saved_tiles/original_tiles/blank/0_1_original.tif")
 norm_img, H_img, E_img = norm_HnE(blank, Io=240, alpha=1, beta=0.15)
 
 #Let us define a function to detect blank tiles and tiles with very minimal information
@@ -110,7 +110,7 @@ def find_mean_std_pixel_value(img_list):
 #the mean and std dev of pixel values. 
 #These numbers can be used to identify 'problematic' slides that we can bypass from our processing. 
 import glob
-orig_tile_dir_name = "images/saved_tiles/original_tiles/"
+orig_tile_dir_name = "../data/images/saved_tiles/original_tiles/"
 
 blank_img_list=(glob.glob(orig_tile_dir_name+"blank/*.tif"))
 partial_img_list=(glob.glob(orig_tile_dir_name+"partial/*.tif"))
@@ -155,10 +155,10 @@ print("Total number of tiles = : ", tiles.tile_count)
 cols, rows = tiles.level_tiles[16]
 
 
-orig_tile_dir_name = "images/saved_tiles/original_tiles/"
-norm_tile_dir_name = "images/saved_tiles/normalized_tiles/"
-H_tile_dir_name = "images/saved_tiles/H_tiles/"
-E_tile_dir_name = "images/saved_tiles/E_tiles/"
+orig_tile_dir_name = "../data/images/saved_tiles/original_tiles/"
+norm_tile_dir_name = "../data/images/saved_tiles/normalized_tiles/"
+H_tile_dir_name = "../data/images/saved_tiles/H_tiles/"
+E_tile_dir_name = "../data/images/saved_tiles/E_tiles/"
 
 for row in range(rows):
     for col in range(cols):
@@ -171,7 +171,7 @@ for row in range(rows):
         #Save original tile
         tiff.imsave(orig_tile_dir_name+tile_name + "_original.tif", temp_tile_np)
         
-        if temp_tile_np.mean() < 230 and temp_tile_np.std() > 15:
+        if temp_tile_np.mean() < 180 and temp_tile_np.std() > 30:
             print("Processing tile number:", tile_name)
             norm_img, H_img, E_img = norm_HnE(temp_tile_np, Io=240, alpha=1, beta=0.15)
         #Save the norm tile, H and E tiles      

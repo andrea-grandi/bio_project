@@ -97,7 +97,7 @@ target/
 
 # WSI images
 *.svs
-*.tiff
+*.tif
 
 # images
 *.png
