@@ -112,11 +112,9 @@ def plot_centroids(img, centroids):
     x_coords = centroids_array[:, 1]
     y_coords = centroids_array[:, 0] 
     
-    plt.scatter(x_coords, y_coords, color='red', marker='o', label='Centroidi')
+    plt.scatter(x_coords, y_coords, color='red', marker='o', label='Centroids')
     
-    plt.title('Centroidi delle cellule')
-    plt.xlabel('Asse X')
-    plt.ylabel('Asse Y')
+    plt.title('Cells Centroids')
     plt.legend()
     plt.show()
     
