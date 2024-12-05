@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import cv2
 from cellpose import models, io
 
+
 def segment_cells(image_path, diameter=None, model_type='cyto2'):
     """
     Execute cellpose segmentation
@@ -21,9 +22,7 @@ def segment_cells(image_path, diameter=None, model_type='cyto2'):
         
         try:
             masks = model.eval([img], 
-                                diameter=diameter, 
-                                flow_threshold=0.5,
-                                cellprob_threshold=0.5)
+                                diameter=diameter)
 
             return masks
         
@@ -61,6 +60,7 @@ def analyze_segmentation(masks):
         print("Masks NOT VALID")
         return
     
+    print(masks)
     # Number of Segmented Cells
     num_cells = len(np.unique(masks[0])) - 1  # -1 because of the background
     
@@ -76,7 +76,7 @@ def analyze_segmentation(masks):
 if __name__ == "__main__":
     image_path = "/Users/andreagrandi/Developer/bio_project/src/bio_project/data/camelyon17_v1.0/patches/patient_020_node_2/patch_patient_020_node_2_x_1344_y_36928.png"
     
-    masks = segment_cells(image_path, diameter=5)
+    masks = segment_cells(image_path, diameter=30)
     
     if masks is not None:
         visualize_segmentation(cv2.imread(image_path, cv2.IMREAD_GRAYSCALE), masks)
