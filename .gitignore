@@ -76,6 +76,9 @@ target/
 # Jupyter NB Checkpoints
 .ipynb_checkpoints/
 
+# Pycharm
+.venv/
+
 # exclude data from source control by default
 # /data/
 
