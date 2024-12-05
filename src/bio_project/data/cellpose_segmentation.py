@@ -119,7 +119,6 @@ def plot_centroids(img, centroids):
     plt.show()
     
 
-
 if __name__ == "__main__":
     image_path = "/Users/andreagrandi/Developer/bio_project/src/bio_project/data/camelyon17_v1.0/patches/patient_088_node_1/patch_patient_088_node_1_x_3232_y_16768.png"
     img = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
