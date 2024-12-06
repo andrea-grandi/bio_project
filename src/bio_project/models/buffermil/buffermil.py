@@ -56,7 +56,7 @@ class Buffermil(Baseline):
         self.mil.buffer=None
         self.inference=False
         for _,data in enumerate(loader):
-            data= data.cuda()
+            data = data.cuda()
             x, edge_index,childof,level,y = data.x, data.edge_index,data.childof,data.level,data.y
             if data.__contains__("edge_index_2") and data.__contains__("edge_index_3"):
                 edge_index2,edge_index3=data.edge_index_2,data.edge_index_3
