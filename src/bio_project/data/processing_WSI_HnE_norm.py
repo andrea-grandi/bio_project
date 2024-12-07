@@ -53,8 +53,6 @@ plt.imshow(smaller_region_np)
 
 norm_img, H_img, E_img = norm_HnE(smaller_region_np, Io=240, alpha=1, beta=0.15)
 
-
-
 plt.figure(figsize=(12, 12))
 plt.subplot(221)
 plt.title('Original Image')
@@ -153,7 +151,6 @@ print("Total number of tiles = : ", tiles.tile_count)
 
 ###### processing and saving each tile to local directory
 cols, rows = tiles.level_tiles[16]
-
 
 orig_tile_dir_name = "../data/images/saved_tiles/original_tiles/"
 norm_tile_dir_name = "../data/images/saved_tiles/normalized_tiles/"
