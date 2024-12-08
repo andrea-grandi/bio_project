@@ -35,7 +35,7 @@ def segment_cells(img, channels=None, diameter=None, model_type='cyto2'):
         except Exception as e:
             print(f"Segmentation Error: {e}")
             return None, None, None
-    
+        
     except Exception as e:
         print(f"Image Loading Error: {e}")
         return None, None, None
