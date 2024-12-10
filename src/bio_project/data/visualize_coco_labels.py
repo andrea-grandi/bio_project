@@ -1,11 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Dec 10 14:35:21 2024
-
-@author: andreagrandi
-"""
-
 import os
 import random
 import json
@@ -13,6 +5,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import cv2
 import numpy as np
+
 
 def display_images_with_coco_annotations(image_paths, annotations, display_type='both'):
     fig, axs = plt.subplots(2, 2, figsize=(10, 10))
