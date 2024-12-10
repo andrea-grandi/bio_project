@@ -8,7 +8,7 @@ from sklearn.preprocessing import MinMaxScaler
 
 from utils.dropout import dropout_node
 from models.utils.basemodel import Baseline
-from models.utils.modules import FCLayer,BClassifierBuffer,MILNetBuffer,init
+from models.utils.modules import FCLayer, BClassifierBuffer, MILNetBuffer, init
 
 
 class Buffermil(Baseline):
@@ -28,7 +28,7 @@ class Buffermil(Baseline):
         return results
 
     def preloop(self, epoch, loader):
-        if epoch %self.args.buffer_freq == self.args.buffer_freq-1:
+        if epoch % self.args.buffer_freq == self.args.buffer_freq - 1:
             self.storebuffer(loader)
 
     def forward(self, x: torch.Tensor, edge_index: torch.Tensor, levels: torch.Tensor, childof: torch.Tensor, edge_index2: torch.Tensor=None, edge_index3: torch.Tensor=None):
@@ -45,37 +45,37 @@ class Buffermil(Baseline):
         Returns:
             _type_: _description_
         """
-        results={}
+        results = {}
         if self.inference:
             results["higher"] = self.mil.bufferinference(x, self.inference, self.aggregationtype)
         else:
             results = self.forward_mil(x, results, self.inference)
         return results
 
-    def storebuffer(self,loader):
-        self.mil.buffer=None
-        self.inference=False
-        for _,data in enumerate(loader):
+    def storebuffer(self, loader):
+        self.mil.buffer = None
+        self.inference = False
+        for _, data in enumerate(loader):
             data = data.cuda()
-            x, edge_index,childof,level,y = data.x, data.edge_index,data.childof,data.level,data.y
+            x, edge_index, childof, level, y = data.x, data.edge_index, data.childof, data.level, data.y
             if data.__contains__("edge_index_2") and data.__contains__("edge_index_3"):
-                edge_index2,edge_index3=data.edge_index_2,data.edge_index_3
+                edge_index2, edge_index3 = data.edge_index_2, data.edge_index_3
             else:
-                edge_index2=None
-                edge_index3=None
+                edge_index2 = None
+                edge_index3 = None
             if self.args.randomstore:
-                self.storeBufferRandom(x,self.args.ntop)
+                self.storeBufferRandom(x, self.args.ntop)
             else:
-                results = self(x, edge_index,level,childof,edge_index2,edge_index3)
-                pred= torch.sigmoid(results["higher"][1]).squeeze()
-                if (pred>0.2) & (y==1):
-                    A=results["higher"][2]
-                    A=MinMaxScaler().fit_transform(A.reshape(-1,1).cpu().detach().numpy()).reshape(-1)
-                    self.storeBuffer(x,A,self.args.ntop)
+                results = self(x, edge_index, level, childof, edge_index2, edge_index3)
+                pred = torch.sigmoid(results["higher"][1]).squeeze()
+                if (pred > 0.2) & (y == 1):
+                    A = results["higher"][2]
+                    A = MinMaxScaler().fit_transform(A.reshape(-1,1).cpu().detach().numpy()).reshape(-1)
+                    self.storeBuffer(x, A, self.args.ntop)
 
-        self.inference=True
+        self.inference = True
 
-    def storeBuffer(self,feats,A,k):
+    def storeBuffer(self, feats, A, k):
         _, m_indices = torch.sort(torch.Tensor(A).cuda(), 0, descending=True) # sort class scores along the instance dimension, m_indices in shape N x C
         m_feats = torch.index_select(feats, dim=0, index=m_indices[:k]) # select critical instances, m_feats in shape C x K
         self.mil.store(m_feats)
