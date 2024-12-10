@@ -13,35 +13,6 @@ Generic tiled TIFF (.tif)
 
 OpenSlide allows reading a small amount of image data at the resolution 
 closest to a desired zoom level.
-
-pip install openslide-python
-
-then download the latest windows binaries
-https://openslide.org/download/
-
-Extract the contents to a place that you can locate later.
-
-If you are getting the error: [WinError 126] The specified module could not be found
-
-Open the lowlevel.py file located in:
-    lib\site-packages\openslide
-    
-Add this at the top, after from __future__ import division, in the lowlevel.py
-os.environ['PATH'] = "path+to+binary" + ";" + os.environ['PATH']
-path+to+binary is the path to your windows binaries that you just downloaded.
-
-In my case, it looks like this.
-
-import os
-os.environ['PATH'] = "C:/Users/Admin/anaconda3/envs/py37/lib/site-packages/openslide/openslide-win64-20171122/bin" + ";" + os.environ['PATH']
-
-A few useful commands to locate the sitepackages directory
-
-import sys
-for p in sys.path:
-    print(p)
-    
-
 """
 
 #import pyvips

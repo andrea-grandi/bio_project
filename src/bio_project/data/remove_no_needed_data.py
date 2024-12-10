@@ -1,11 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Dec 10 14:23:18 2024
-
-@author: andreagrandi
-"""
-
 import os
 import shutil
 
