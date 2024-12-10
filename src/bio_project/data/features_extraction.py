@@ -36,6 +36,7 @@ class PatchFeatureExtractor:
         self.cfg.MODEL.WEIGHTS = model_path
         self.cfg.MODEL.ROI_HEADS.NUM_CLASSES = num_classes
         self.cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.5
+        self.cfg.MODEL.DEVICE = 'cpu'
 
         self.predictor = DefaultPredictor(self.cfg)
         self.metadata = MetadataCatalog.get(self.cfg.DATASETS.TRAIN[0])
@@ -117,6 +118,8 @@ class PatchFeatureExtractor:
         """
         # Perform instance segmentation
         segmentation_results = self.segment_patch(patch)
+        print("TEST")
+        print(segmentation_results['masks'])
         
         # Compute nuclei distribution
         nuclei_distribution = self.compute_nuclei_distribution(segmentation_results['masks'])
@@ -132,6 +135,23 @@ class PatchFeatureExtractor:
             'nuclei_distribution': nuclei_distribution,
             'cell_classification': cell_classification
         }
+    
+    def visualize_segmentation(self, mask):
+        """
+        
+
+        Parameters
+        ----------
+        mask : TYPE
+            DESCRIPTION.
+
+        Returns
+        -------
+        None.
+
+        """
+        
+        
 
 def main():
     # Example usage
@@ -141,7 +161,7 @@ def main():
     extractor = PatchFeatureExtractor(model_path, config_path)
     
     # Load a sample patch
-    sample_patch = cv2.imread('/Users/andreagrandi/Developer/bio_project/src/bio_project/data/camelyon17_v1.0/patches/patient_034_node_3/patch_patient_034_node_3_x_3072_y_32640.png')
+    sample_patch = cv2.imread('/Users/andreagrandi/Developer/bio_project/src/bio_project/data/camelyon17_v1.0/patches/patient_046_node_4/patch_patient_046_node_4_x_1728_y_17920.png')
     
     # Extract features
     patch_features = extractor.extract_patch_features(sample_patch)
