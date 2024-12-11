@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import cv2
 import argparse
 import seaborn as sns
+
 from cellpose import models, io, plot
 
 from utils.visualize import plot_centroids, visualize_segmentation
@@ -29,7 +30,9 @@ def segment_cells(img, channels=None, diameter=None, model_type='cyto2'):
         print(f"Immagine dtype: {img.dtype}")
         
         try:
-            masks, flows, styles, diams = model.eval([img], diameter=diameter, channels=channels)
+            masks, flows, styles, diams = model.eval([img], 
+                                                     diameter=diameter, 
+                                                     channels=channels)
             return masks, flows, styles, diams
         
         except Exception as e:
@@ -43,7 +46,9 @@ def segment_cells(img, channels=None, diameter=None, model_type='cyto2'):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--image_path", type=str, default="/Users/andreagrandi/Developer/bio_project/src/bio_project/data/camelyon17_v1.0/patches/patient_088_node_1/patch_patient_088_node_1_x_3232_y_16768.png")
+    parser.add_argument("--image_path", 
+                        type=str, 
+                        default="/Users/andreagrandi/Developer/bio_project/src/bio_project/data/camelyon17_v1.0/patches/patient_072_node_0/patch_patient_072_node_0_x_7392_y_46208.png")
 
     args = parser.parse_args()
     image_path = args.image_path

@@ -1,9 +1,9 @@
 """
 This file is for extract features from patch.
 
-We use Detectron2 (trained by us) for instance segmentation 
-and extract the masks and after compute nuclei distribution, 
-number of nuclei and cells classification.
+We use Detectron2 trained on a custom dataset for instance
+segmentation and extract the masks and after compute nuclei
+distribution, number of nuclei and cells classification.
 
 With this we can pass the features to the bufferMIL
 instead of using significant pathes like the original.
@@ -13,6 +13,7 @@ instead of using significant pathes like the original.
 import numpy as np
 import torch
 import cv2
+
 import detectron2
 from detectron2.config import get_cfg
 from detectron2.data import MetadataCatalog
@@ -149,8 +150,7 @@ class PatchFeatureExtractor:
         -------
         None.
 
-        """
-        
+        """        
         
 
 def main():

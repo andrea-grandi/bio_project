@@ -86,7 +86,6 @@ norm_img, H_img, E_img = norm_HnE(blank, Io=240, alpha=1, beta=0.15)
 #This function can be used to identify these tiles so we can make a decision on what to do with them. 
 #Here, the function calculates mean and std dev of pixel values in a tile. 
 def find_mean_std_pixel_value(img_list):
-    
     avg_pixel_value = []
     stddev_pixel_value= []
     for file in img_list:

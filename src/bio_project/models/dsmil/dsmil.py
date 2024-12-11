@@ -7,12 +7,10 @@
   year={2021}
 }
 """
-
-
 import torch
 
 from models.utils.basemodel import Baseline
-from models.utils.modules import FCLayer,BClassifier,MILNet,init
+from models.utils.modules import FCLayer, BClassifier, MILNet, init
 from utils.dropout import dropout_node
 
 
@@ -24,7 +22,7 @@ class DSMIL(Baseline):
         self.mil = MILNet(milfc, milbag)
         self.mil = init(self.mil, self.state_dict_weights)
 
-    def forward_mil(self, feats,results):
+    def forward_mil(self, feats, results):
         #second step: MIL
         results["higher"] = self.mil(feats)#x5x20
         return results
@@ -45,7 +43,7 @@ class DSMIL(Baseline):
         """
         #feats, indecesperlevel, results = self.forward_gnn(x, edge_index, levels, childof, edge_index2, edge_index3)
         if self.training and self.args.dropout:
-            edge_index, edge_mask, edge_node= dropout_node(edge_index = edge_index, p = 0.5)
+            edge_index, edge_mask, edge_node = dropout_node(edge_index = edge_index, p = 0.5)
             x = x[edge_node]
         results = {}
         results = self.forward_mil(x, results)
