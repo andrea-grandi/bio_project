@@ -1,8 +1,16 @@
 """
-Reference:
-https://github.com/aimagelab/mil4wsi
+@inproceedings{Bontempo2023_MICCAI,
+    author={Bontempo, Gianpaolo and Porrello, Angelo and Bolelli, Federico and Calderara, Simone and Ficarra, Elisa},
+    title={{DAS-MIL: Distilling Across Scales for MIL Classification of Histological WSIs}},
+    booktitle={Medical Image Computing and Computer Assisted Intervention – MICCAI 2023},
+    pages={248--258},
+    year=2023,
+    month={Oct},
+    publisher={Springer},
+    doi={https://doi.org/10.1007/978-3-031-43907-0_24},
+    isbn={978-3-031-43906-3}
+}
 """
-
 import torch
 from sklearn.preprocessing import MinMaxScaler
 
@@ -15,8 +23,8 @@ class Buffermil(Baseline):
     def __init__(self, args, state_dict_weights):
         super(Buffermil, self).__init__(args, state_dict_weights)
 
-        milfc,milbag=FCLayer(self.c_in, self.classes), BClassifierBuffer(self.c_in, self.classes)
-        self.mil = MILNetBuffer(milfc,milbag)
+        milfc, milbag = FCLayer(self.c_in, self.classes), BClassifierBuffer(self.c_in, self.classes)
+        self.mil = MILNetBuffer(milfc, milbag)
         self.mil = init(self.mil, self.state_dict_weights)
         self.inference = False
         self.args = args
@@ -70,21 +78,28 @@ class Buffermil(Baseline):
                 pred = torch.sigmoid(results["higher"][1]).squeeze()
                 if (pred > 0.2) & (y == 1):
                     A = results["higher"][2]
-                    A = MinMaxScaler().fit_transform(A.reshape(-1,1).cpu().detach().numpy()).reshape(-1)
+                    A = MinMaxScaler().fit_transform(A.reshape(-1, 1).cpu().detach().numpy()).reshape(-1)
                     self.storeBuffer(x, A, self.args.ntop)
 
         self.inference = True
 
+    """
+    Critical instance selection and buffer storing
+    k critical instances are selected
+    """
     def storeBuffer(self, feats, A, k):
-        _, m_indices = torch.sort(torch.Tensor(A).cuda(), 0, descending=True) # sort class scores along the instance dimension, m_indices in shape N x C
-        m_feats = torch.index_select(feats, dim=0, index=m_indices[:k]) # select critical instances, m_feats in shape C x K
+        _, m_indices = torch.sort(torch.Tensor(A).cuda(), 0, descending = True) # sort class scores along the instance dimension, m_indices in shape N x C
+        m_feats = torch.index_select(feats, dim = 0, index = m_indices[:k]) # select critical instances, m_feats in shape C x K
         self.mil.store(m_feats)
 
-    def storeBufferRandom(self,feats,k):
+    """
+    In the first itearation a random buffer is stored
+    """
+    def storeBufferRandom(self, feats, k):
         perm = torch.randperm(feats.size(0))
         idx = perm[:k]
         m_feats = feats[idx]
         self.mil.store(m_feats)
 
-    def bufferinference(self,feats):
+    def bufferinference(self, feats):
         self.mil.bufferinference(feats)

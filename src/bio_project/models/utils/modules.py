@@ -1,6 +1,6 @@
+import torch
 import torch.nn as nn
 import torch_geometric.nn as geom_nn
-import torch
 import torch.nn.functional as F
 
 gnn_layer_by_name = {

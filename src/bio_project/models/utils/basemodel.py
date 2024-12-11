@@ -6,7 +6,6 @@ from utils.dropout import dropout_node
 
 
 class Baseline(nn.Module):
-
     def __init__(self, args, state_dict_weights=None):
         """
         Inputs:
@@ -28,8 +27,7 @@ class Baseline(nn.Module):
         self.max=args.max
         self.state_dict_weights=state_dict_weights
 
-
-    def forward_scale(self,x: torch.Tensor,edge_index: torch.Tensor,gnnlayer: torch.nn.Module, glu=None)-> tuple[torch.Tensor,torch.Tensor]:
+    def forward_scale(self, x: torch.Tensor, edge_index: torch.Tensor, gnnlayer: torch.nn.Module, glu=None)-> tuple[torch.Tensor, torch.Tensor]:
         """
         Forward pass at the scale level.
 
@@ -93,8 +91,7 @@ class Baseline(nn.Module):
         Returns:
             results (dict): model output
         """
-        feats, indecesperlevel, results = self.forward_gnn(
-            x, edge_index, levels, childof, edge_index2, edge_index3)
+        feats, indecesperlevel, results = self.forward_gnn(x, edge_index, levels, childof, edge_index2, edge_index3)
         results = self.forward_mil(indecesperlevel, feats, results)
         return results
 
