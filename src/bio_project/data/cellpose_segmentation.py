@@ -48,7 +48,11 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--image_path", 
                         type=str, 
-                        default="/Users/andreagrandi/Developer/bio_project/src/bio_project/data/camelyon17_v1.0/patches/patient_072_node_0/patch_patient_072_node_0_x_7392_y_46208.png")
+                        default="/Users/andreagrandi/Developer/"
+                                "bio_project/src/bio_project/data/camelyon17_v1.0/"
+                                "patches/patient_072_node_0/"
+                                "patch_patient_072_node_0_x_7392_y_46208.png"
+                        )
 
     args = parser.parse_args()
     image_path = args.image_path

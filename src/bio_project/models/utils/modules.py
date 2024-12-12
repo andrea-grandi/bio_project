@@ -83,20 +83,28 @@ class BClassifier(nn.Module):
         if nonlinear:
             # Non-linear transformation
             self.lin = nn.Sequential(
-                nn.Linear(input_size, input_size), nn.ReLU())
-            self.q = nn.Sequential(nn.Linear(input_size, 128), nn.Tanh())
+                nn.Linear(input_size, input_size),
+                nn.ReLU()
+            )
+            self.q = nn.Sequential(
+                nn.Linear(input_size, 128),
+                nn.Tanh()
+            )
         else:
             # Identity transformation
             self.lin = nn.Identity()
             self.q = nn.Linear(input_size, 128)
+            
         self.v = nn.Sequential(
             nn.Dropout(dropout_v),
             nn.Linear(input_size, input_size)
         )
 
         # 1D convolutional layer that can handle multiple class (including binary)
-        self.fcc = nn.Conv1d(output_class, output_class,
-                             kernel_size=input_size)
+        self.fcc = nn.Conv1d(output_class, 
+                             output_class,
+                             kernel_size=input_size
+                            )
 
     def forward(self, feats, c):
         """Forward pass of the bag-level classifier.
@@ -126,8 +134,7 @@ class BClassifier(nn.Module):
         # Compute inner product of Q to each entry of q_max, A in shape N x C, each column contains unnormalized attention scores
         A = torch.mm(Q, q_max.transpose(0, 1))
         # Normalize attention scores, A in shape N x C,
-        A = F.softmax(
-            A / torch.sqrt(torch.tensor(Q.shape[1], dtype=torch.float32, device=device)), 0)
+        A = F.softmax(A / torch.sqrt(torch.tensor(Q.shape[1], dtype=torch.float32, device=device)), 0)
         # Compute bag representation, B in shape C x V
         B = torch.mm(A.transpose(0, 1), V)
 
@@ -174,8 +181,8 @@ class MILNet(nn.Module):
             b_classifier (nn.Module): Bag-level classifier.
         """
         super(MILNet, self).__init__()
-        self.i_classifier = i_classifier
-        self.b_classifier = b_classifier
+        self.i_classifier = i_classifier # FCLayer
+        self.b_classifier = b_classifier # BClassifier
 
     def forward(self, x):
         """
@@ -203,8 +210,10 @@ class MLP(nn.Module):
                                 nn.ELU(),
                                 nn.Linear(int(in_s/2),int(out_s))
                                 )
+        
     def forward(self,input):
         return self.mlp(input)
+
 
 class GatedLinearUnit(nn.Module):
     def __init__(self, in_s,out_s,norm):
@@ -220,6 +229,7 @@ class GatedLinearUnit(nn.Module):
         if self.norm:
             x=self.norm(x)
         return x
+
 
 def init(model, state_dict_weights):
     """
