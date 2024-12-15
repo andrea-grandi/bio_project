@@ -161,7 +161,7 @@ class BClassifierBuffer(nn.Module):
 
         ### 1D convolutional layer that can handle multiple class (including binary)
         self.fcc = nn.Conv1d(output_class, output_class, kernel_size=input_size)
-        self.sigma=0.05
+        self.sigma = 0.05
 
     def forward(self, feats_slide, feats_buffer,use_buffer,aggregationtype: None): # N x K, M x K
         device = feats_slide.device
