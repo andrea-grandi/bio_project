@@ -21,8 +21,7 @@ def set_seed(seed: int = 42) -> None:
 
 
 if __name__ == "__main__":
-
-    parser = argparse.ArgumentParser(description='Train CAMIL')
+    parser = argparse.ArgumentParser(description='Train APKMIL')
     parser.add_argument('--save_dir', dest='save_dir',help='directory where the weights of the model are stored',default="saved_models", type=str)
     parser.add_argument('--lr', dest='init_lr',help='initial learning rate',default=0.0002, type=float)
     parser.add_argument('--decay', dest='weight_decay',help='weight decay',default=1e-5, type=float)

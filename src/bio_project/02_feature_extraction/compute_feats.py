@@ -19,9 +19,6 @@ from sklearn import preprocessing
 import itertools
 
 
-device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
-
-
 class ToPIL(object):
     def __call__(self, sample):
         img = sample
@@ -126,7 +123,7 @@ def generate_values_resnet(images, wsi_coords, dist="cosine"):
     values = np.reshape(values, (wsi_coords.shape[0], neighbor_indices.shape[1]))
     return np.array(coords), values, neighbor_indices
 
-def compute_feats( bags_list, i_classifier, data_slide_dir, save_path):
+def compute_feats(bags_list, i_classifier, data_slide_dir, save_path):
     num_bags = len(bags_list)
 
     for i in range(0, num_bags):
@@ -184,6 +181,7 @@ def compute_feats( bags_list, i_classifier, data_slide_dir, save_path):
         torch.save(features, os.path.join(save_path, 'pt_files', slide_id + '.pt'))
 
 
+device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 def main():
     parser = argparse.ArgumentParser(description='Compute features from SimCLR embedder')
     parser.add_argument('--num_classes', default=512, type=int, help='Number of output classes')
@@ -204,7 +202,6 @@ def main():
             print('No weight could be loaded..')
         model_dict.update(weights)
         model.load_state_dict(model_dict)
-
         return model
 
     if args.backbone == 'resnet18':
