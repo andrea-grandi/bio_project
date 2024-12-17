@@ -198,7 +198,6 @@ def main():
     args = parser.parse_args()
 
     def load_model_weights(model, weights):
-
         model_dict = model.state_dict()
         weights = {k: v for k, v in weights.items() if k in model_dict}
         if weights == {}:
@@ -222,6 +221,7 @@ def main():
         num_feats = 2048
     for param in resnet.parameters():
         param.requires_grad = False
+
     resnet.fc = nn.Identity()
     i_classifier = modules.IClassifier(resnet, num_feats, output_class=args.num_classes).cuda()
 
@@ -232,7 +232,6 @@ def main():
 
     os.makedirs(args.output, exist_ok=True)
     bags_list = glob.glob(args.dataset)
-
 
     state_dict_weights = torch.load(args.weights)
     state_dict_init = i_classifier.state_dict()
