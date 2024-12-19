@@ -109,3 +109,6 @@ target/
 # models
 *.pt
 *.pth
+
+# ZIP files
+*.zip
