@@ -14,9 +14,11 @@ def visualize_segmentation(img, masks):
     plt.imshow(img, cmap='gray')
     plt.title('Original Image')
     
+    print(masks.shape)
+    
     plt.subplot(122)
     plt.imshow(img, alpha=0.5, cmap='gray')
-    plt.imshow(np.squeeze(masks[0]), alpha=0.7, cmap='viridis')
+    plt.imshow(masks, alpha=0.7, cmap='viridis')
     plt.title('Segmented Image')
     
     plt.tight_layout()
@@ -34,8 +36,8 @@ def plot_centroids(img, masks):
         print("Impossible to Visualize Image - NOT VALID")
         return
     
-    num_cells = (len(np.unique(masks[0])) - 1)
-    centroids = [center_of_mass(masks[0]==i) for i in range(1, num_cells + 1)]
+    num_cells = (len(np.unique(masks)) - 1)
+    centroids = [center_of_mass(masks==i) for i in range(1, num_cells + 1)]
 
     plt.figure(figsize=(10, 8))
     

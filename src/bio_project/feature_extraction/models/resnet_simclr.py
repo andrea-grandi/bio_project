@@ -48,7 +48,6 @@ class ResNetSimCLR(nn.Module):
         except:
             raise ("Invalid model name. Check the config file and pass one of: resnet18 or resnet50")
 
-
     def load_model_weights(self, model, weights):
         state_dict_weights = torch.load(weights)
         state_dict_init = model.state_dict()

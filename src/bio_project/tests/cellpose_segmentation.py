@@ -1,11 +1,10 @@
-import os
-import numpy as np 
-import matplotlib.pyplot as plt 
 import cv2
 import argparse
-import seaborn as sns
+import torchvision.transforms as transforms
+from PIL import Image
+import numpy as np 
 
-from cellpose import models, io, plot
+from cellpose import models
 
 from utils.visualize import plot_centroids, visualize_segmentation
 from utils.analyze import analyze_segmentation
@@ -30,9 +29,10 @@ def segment_cells(img, channels=None, diameter=None, model_type='cyto2'):
         print(f"Immagine dtype: {img.dtype}")
         
         try:
-            masks, flows, styles, diams = model.eval([img], 
+            masks, flows, styles, diams = model.eval(img, 
                                                      diameter=diameter, 
-                                                     channels=channels)
+                                                     channels=channels
+                                                     )
             return masks, flows, styles, diams
         
         except Exception as e:
@@ -49,9 +49,9 @@ if __name__ == "__main__":
     parser.add_argument("--image_path", 
                         type=str, 
                         default="/Users/andreagrandi/Developer/"
-                                "bio_project/src/bio_project/data/camelyon17_v1.0/"
-                                "patches/patient_072_node_0/"
-                                "patch_patient_072_node_0_x_7392_y_46208.png"
+                                "bio_project/src/bio_project/tests/camelyon17_v1.0/"
+                                "patches/patient_092_node_1/"
+                                "patch_patient_092_node_1_x_22592_y_7680.png"
                         )
 
     args = parser.parse_args()

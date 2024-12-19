@@ -17,7 +17,7 @@ def analyze_segmentation(img, masks):
         return
 
     # Number of Segmented Cells
-    num_cells = (len(np.unique(masks[0])) - 1)  # -1 because of the background
+    num_cells = (len(np.unique(masks)) - 1)  # -1 because of the background
     
     print(f"Number of Segmented Cells: {num_cells}")
     
@@ -34,7 +34,7 @@ def analyze_segmentation(img, masks):
     # print(f"Cell Density: {cell_density_mm2:.2f} cells/mm²")
     
     # Cells Sizes
-    cell_sizes = [np.sum(masks[0] == i) for i in range(1, num_cells + 1)]
+    cell_sizes = [np.sum(masks == i) for i in range(1, num_cells + 1)]
 
     print("Cells Size Distributions:")
     print(f"- Average Dimension: {np.mean(cell_sizes):.2f}")
