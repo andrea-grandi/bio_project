@@ -37,21 +37,18 @@ def segment_cells(img, channels=None, diameter=None, model_type='cyto2'):
         
         except Exception as e:
             print(f"Segmentation Error: {e}")
-            return None, None, None
+            return None, None, None, None
         
     except Exception as e:
         print(f"Image Loading Error: {e}")
-        return None, None, None
+        return None, None, None, None
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--image_path", 
                         type=str, 
-                        default="/Users/andreagrandi/Developer/"
-                                "bio_project/src/bio_project/tests/camelyon17_v1.0/"
-                                "patches/patient_092_node_1/"
-                                "patch_patient_092_node_1_x_22592_y_7680.png"
+                        default="/Users/andreagrandi/Developer/bio_project/src/bio_project/tests/dataset/patches/patch_patient_004_node_4_x_10112_y_18816.png"
                         )
 
     args = parser.parse_args()
