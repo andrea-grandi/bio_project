@@ -1,11 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Dec 23 13:15:13 2024
-
-@author: andreagrandi
-"""
-
 """
 This code automates the conversion of binary masks representing different 
 object categories into the COCO (Common Objects in Context) JSON format. 
