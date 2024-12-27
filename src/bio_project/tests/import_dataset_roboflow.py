@@ -1,6 +1,6 @@
 import roboflow
 
-rf = roboflow.Roboflow(api_key='A1HqGsd7n9GXR5ZyckOQ')
+rf = roboflow.Roboflow(api_key='')
 
 # get a workspace
 workspace = rf.workspace("https://app.roboflow.com/andrea-grandi/camelyon_segmentation/upload")
