@@ -112,3 +112,6 @@ target/
 
 # ZIP files
 *.zip
+
+.jupyter/
+.virtual_documents/
