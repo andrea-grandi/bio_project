@@ -1,3 +1,17 @@
+# Copyright 2023 Bontempo Gianpaolo
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 import torch
 import os
 import time
@@ -5,7 +19,7 @@ import openslide
 import torchvision.transforms as transforms
 import submitit
 import argparse
-from CLAM.dataset_modules.dataset_h5 import Dataset_All_Bags, Whole_Slide_Bag_FP
+from datasets.dataset_h5 import Dataset_All_Bags, Whole_Slide_Bag_FP
 from torch.utils.data import DataLoader
 
 # Check the device
@@ -52,7 +66,8 @@ def process(bag_candidate_idx, args):
     time_stop = time.time()
 
 
-def save_patches(file_path, output_path, wsi, target_patch_size, batch_size=160):
+def save_patches(file_path, output_path, wsi, target_patch_size,
+                 batch_size=160):
     """
     Function to save patches from a bag (.h5 file) and store them as images.
 
@@ -63,13 +78,11 @@ def save_patches(file_path, output_path, wsi, target_patch_size, batch_size=160)
         target_patch_size (int): Custom defined, rescaled image size before embedding.
         batch_size (int): Batch size for computing features in batches.
     """
-    dataset = Whole_Slide_Bag_FP(file_path=file_path, 
-                                wsi=wsi,
-                                target_patch_size=target_patch_size, 
-                                custom_transforms=trnsfrms_val
-                                )
+    dataset = Whole_Slide_Bag_FP(file_path=file_path, wsi=wsi,
+                                 target_patch_size=target_patch_size, custom_transforms=trnsfrms_val)
     x, y = dataset[0]
-    kwargs = {'num_workers': 4, 'pin_memory': True} if device.type == "cuda" else {}
+    kwargs = {'num_workers': 4,
+              'pin_memory': True} if device.type == "cuda" else {}
     loader = DataLoader(dataset=dataset, batch_size=batch_size, **kwargs)
     mode = 'w'
     transform = transforms.ToPILImage()
@@ -114,11 +127,7 @@ if __name__ == '__main__':
 
     # Configure the executor for parallel execution
     executor = submitit.AutoExecutor("logs/")
-    executor.update_parameters(slurm_partition="prod", 
-                               name="data_prep",
-                               slurm_time=600, 
-                               mem_gb=15, 
-                               slurm_array_parallelism=5
-                               )
+    executor.update_parameters(slurm_partition="prod", name="data_prep",
+                               slurm_time=600, mem_gb=15, slurm_array_parallelism=5)
     jobs = executor.map_array(process, candidates, parameters)
-    #process(0, args)
+    # process(0,args)

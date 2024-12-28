@@ -93,6 +93,47 @@ class Buffermil(Baseline):
         self.mil.store(m_feats)
 
     """
+    Custom buffer storing with cell count
+    """
+    def storeBuffer(self, feats, A, k, patch_names, cell_counts, cell_threshold=50):
+        """
+        Store the most critical instances in the buffer considering both attention scores and cell count
+        
+        Args:
+            feats: Feature tensors of patches
+            A: Original attention scores
+            k: Number of patches to select
+            patch_names: List of patch names corresponding to feats
+            cell_counts: Dictionary mapping patch names to cell counts
+            cell_threshold: Minimum number of cells to consider a patch critical
+        """
+        # Convert attention scores to tensor
+        A_tensor = torch.Tensor(A).cuda()
+        
+        # Create cell count weights
+        cell_weights = torch.ones_like(A_tensor)
+        for i, patch_name in enumerate(patch_names):
+            cell_count = cell_counts.get(patch_name, 0)
+            if cell_count > cell_threshold:
+                # Boost attention score for patches with high cell count
+                cell_weights[i] = 1.5
+            else:
+                # Reduce attention score for patches with low cell count
+                cell_weights[i] = 0.5
+                
+        # Modify attention scores based on cell count
+        modified_A = A_tensor * cell_weights
+        
+        # Sort based on modified scores
+        _, m_indices = torch.sort(modified_A, 0, descending=True)
+        
+        # Select critical instances
+        m_feats = torch.index_select(feats, dim=0, index=m_indices[:k])
+        
+        # Store in buffer
+        self.mil.store(m_feats)
+
+    """
     In the first itearation a random buffer is stored
     """
     def storeBufferRandom(self, feats, k):
