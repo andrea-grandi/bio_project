@@ -41,6 +41,7 @@ class PatchDataset(Dataset):
         
         return img, numerical_features, patch_id
 
+
 def get_feature_extractor():
     """Initialize ResNet50 model for feature extraction."""
     model = models.resnet50(pretrained=True)
@@ -115,6 +116,7 @@ def main():
     
     os.makedirs(args.output_dir, exist_ok=True)
     extract_features(args)
+
 
 if __name__ == '__main__':
     main()
