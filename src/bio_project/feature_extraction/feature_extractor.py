@@ -10,7 +10,7 @@ import numpy as np
 from PIL import Image
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-
+print()
 
 class PatchDataset(Dataset):
     def __init__(self, patches_dir, csv_path, transform=None):
