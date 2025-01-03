@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from losses import *
+from bio_project.utils.losses import *
 from dropout import dropout_node
 
 
