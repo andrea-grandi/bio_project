@@ -115,3 +115,5 @@ target/
 
 .jupyter/
 .virtual_documents/
+
+detectron2/

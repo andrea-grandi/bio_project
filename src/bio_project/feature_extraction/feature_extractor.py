@@ -10,13 +10,24 @@ import numpy as np
 from PIL import Image
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-print()
 
-class PatchDataset(Dataset):
+
+class MyDataset(Dataset):
     def __init__(self, patches_dir, csv_path, transform=None):
-        self.patches_list = sorted(glob.glob(os.path.join(patches_dir, '*.jpg')))
+        self.patches_list = sorted(glob.glob(os.path.join(patches_dir, '**', '*.jpg'), recursive=True))
         self.features_df = pd.read_csv(csv_path)
         self.transform = transform
+
+        # Create mapping from patch_id to numerical features
+        self.id_mapping = self.create_id_mapping()
+
+    def create_id_mapping(self):
+        """Create a mapping from image filenames to their numerical features."""
+        mapping = {}
+        for _, row in self.features_df.iterrows():
+            patch_id = row['patch_id'] 
+            mapping[patch_id] = row.drop(['patch_id']).values.astype(np.float32)
+        return mapping
 
     def __len__(self):
         return len(self.patches_list)
@@ -30,14 +41,14 @@ class PatchDataset(Dataset):
             img = self.transform(img)
 
         # Extract patch metadata
-        patch_id = os.path.basename(img_path).replace('.jpg', '')
+        patch_id = os.path.basename(img_path)
         
-        # Get corresponding numerical features from CSV
-        features = self.features_df[
-            (self.features_df['patch_id'] == patch_id)
-        ].iloc[0]
-        
-        numerical_features = features.drop(['patch_id']).values
+        # Get corresponding numerical features using mapping
+        if patch_id not in self.id_mapping:
+            raise ValueError(f"No numerical features found for patch ID: {patch_id}")
+
+        numerical_features = self.id_mapping[patch_id]
+        #print(numerical_features)
         
         return img, numerical_features, patch_id
 
@@ -61,7 +72,7 @@ def extract_features(args):
     ])
 
     # Initialize dataset and dataloader
-    dataset = PatchDataset(args.patches_dir, args.csv_path, transform=transform)
+    dataset = MyDataset(args.patches_dir, args.csv_path, transform=transform)
     dataloader = DataLoader(dataset, batch_size=args.batch_size, 
                           shuffle=False, num_workers=args.num_workers)
 

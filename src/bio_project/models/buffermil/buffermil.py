@@ -94,6 +94,7 @@ class Buffermil(Baseline):
 
     """
     Custom buffer storing with cell count
+    Andrea Grandi and Daniele Vellani
     """
     def storeBuffer(self, feats, A, k, patch_names, cell_counts, cell_threshold=50):
         """
