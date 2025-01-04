@@ -110,6 +110,7 @@ def extract_features(args):
         f.create_dataset('combined_features', data=np.array(all_combined_features))
         f.create_dataset('patch_names', data=np.array(patch_names, dtype='S'))
 
+
 def main():
     parser = argparse.ArgumentParser(description='Feature extraction for WSI patches')
     parser.add_argument('--patches_dir', type=str, required=True,

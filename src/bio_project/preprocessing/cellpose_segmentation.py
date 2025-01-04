@@ -1,63 +1,80 @@
-import cv2
+import os
+import numpy as np
+import pandas as pd
+from tqdm import tqdm
 import argparse
-import torchvision.transforms as transforms
-from PIL import Image
-import numpy as np 
-
-from cellpose import models
-
-from utils.visualize import plot_centroids, visualize_segmentation
-from utils.analyze import analyze_segmentation
+import cv2
+from cellpose import models, io
 
 
-def segment_cells(img, channels=None, diameter=None, model_type='cyto2'):
-    """
-    Execute cellpose segmentation
+# Function to process patches and extract metadata
+def process_patches(input_dir, output_csv, channels=None, diameter=None, model_type="cyto3"):
+    # Load Cellpose model
+    model = models.Cellpose(gpu=False, model_type=model_type)
+
+    # Prepare a list for metadata
+    metadata = []
+
+    # Iterate through the patches
+    for patch_file in tqdm(os.listdir(input_dir)):
+        if patch_file.lower().endswith(('.png', '.jpg', '.jpeg', '.tiff', '.tif')):
+            patch_path = os.path.join(input_dir, patch_file)
+
+            # Load the image
+            img = cv2.imread(patch_path, cv2.IMREAD_GRAYSCALE)
+
+            # Auto-estimate diameter if not provided
+            if diameter is None:
+                estimated_diameter = model.eval(img, channels=channels, diameter=None)[-1]
+                print(f"Diametro stimato: {estimated_diameter}")
+                diameter = estimated_diameter
+            
+            try:
+                masks, flows, styles, diams = model.eval(img, channels=channels, diameter=diameter)
+            
+            except Exception as e:
+                print(f"Segmentation Error: {e}")
+
+            # Extract metadata
+            num_cells = np.max(masks)  # Number of segmented cells
+            cell_areas = [np.sum(masks == i) for i in range(1, num_cells + 1)]
+            mean_cell_area = np.mean(cell_areas) if num_cells > 0 else 0
+            cell_density = num_cells / img.size
+
+            # Placeholder for cell type detection (needs custom classifier)
+            # For now, assume all are generic "cell"
+            cell_types = {"generic_cell": num_cells}
+
+            # Store the metadata
+            metadata.append({
+                "patch_id": patch_file,
+                "num_cells": num_cells,
+                "mean_cell_area": mean_cell_area,
+                "cell_density": cell_density,
+                "cell_types": cell_types
+            })
     
-    Params:
-        - img: input image
-        - channels:
-        - diameter: threshold diameter 
-        - model_type: model type for cellpose
-    """
-    try:
-        # Model initialization
-        model = models.Cellpose(gpu=False, model_type=model_type)
-        
-        # Debug: image info
-        print(f"Immagine shape: {img.shape}")
-        print(f"Immagine dtype: {img.dtype}")
-        
-        try:
-            masks, flows, styles, diams = model.eval(img, 
-                                                     diameter=diameter, 
-                                                     channels=channels
-                                                     )
-            return masks, flows, styles, diams
-        
-        except Exception as e:
-            print(f"Segmentation Error: {e}")
-            return None, None, None, None
-        
-    except Exception as e:
-        print(f"Image Loading Error: {e}")
-        return None, None, None, None
+    # Print the number of images processed
+    print(f"Number of images processed: {len(metadata)}")
+
+    # Save metadata to CSV
+    metadata_df = pd.DataFrame(metadata)
+    metadata_df.to_csv(output_csv, index=False)
+
+    print(f"Metadata saved to {output_csv}")
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--image_path", 
+    parser.add_argument("--input_dir", 
                         type=str, 
-                        default="/Users/andreagrandi/Developer/bio_project/src/bio_project/tests/dataset/patches/patch_patient_004_node_4_x_10112_y_18816.png"
-                        )
+                        default="/Users/andreagrandi/Developer/bio_project/src/bio_project/dataset/camelyon17/512x512_patches"
+    )
+    parser.add_argument("--output_csv", 
+                        type=str, 
+                        default="/Users/andreagrandi/Developer/bio_project/src/bio_project/dataset/camelyon17/cellpose_metadata.csv"
+    )
 
     args = parser.parse_args()
-    image_path = args.image_path
-    
-    img = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE)
+    process_patches(args.input_dir, args.output_csv)
 
-    masks, flows, styles, diams = segment_cells(img, diameter=8)
-
-    visualize_segmentation(img, masks)
-    analyze_segmentation(img, masks)
-    plot_centroids(img, masks)
