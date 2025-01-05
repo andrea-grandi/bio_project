@@ -22,6 +22,7 @@ def process_patches(input_dir, output_csv, channels=None, diameter=None, model_t
 
             # Load the image
             img = cv2.imread(patch_path, cv2.IMREAD_GRAYSCALE)
+            print(f"Processing {patch_file}...")
 
             # Auto-estimate diameter if not provided
             if diameter is None:
@@ -53,9 +54,6 @@ def process_patches(input_dir, output_csv, channels=None, diameter=None, model_t
                 "cell_density": cell_density,
                 "cell_types": cell_types
             })
-    
-    # Print the number of images processed
-    print(f"Number of images processed: {len(metadata)}")
 
     # Save metadata to CSV
     metadata_df = pd.DataFrame(metadata)
