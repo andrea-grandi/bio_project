@@ -107,7 +107,7 @@ target/
 *.png
 
 # models
-*.pt
+#*.pt
 *.pth
 
 # ZIP files

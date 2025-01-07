@@ -51,7 +51,7 @@ def extract_visual_features(model, image_dir):
 
                 # Debug
                 print(f"Feature extracted for {image_name}")
-                print(f"Feature vector: {feature_vector}")
+                #print(f"Feature vector: {feature_vector}")
 
     return features
 
@@ -70,24 +70,22 @@ def concatenate_features(visual_features, numerical_features_path):
 
     return concatenated_features
 
-# Saving features to h5
-def save_features_to_h5(features, output_path):
-    with h5py.File(output_path, "w") as h5file:
-        for patch_id, feature_vector in features.items():
-            h5file.create_dataset(patch_id, data=feature_vector)
+# Saving features
+def save_features_to_pt(features, output_path):
+    torch.save(features, output_path)
 
 
 def main():
     checkpoint_path = "/Users/andreagrandi/Developer/bio_project/weights/dino_camelyon17/checkpoint_20x.pth"
     image_dir = "/Users/andreagrandi/Developer/bio_project/src/bio_project/dataset/camelyon17/512x512_patches"
     numerical_features_path = "/Users/andreagrandi/Developer/bio_project/src/bio_project/dataset/camelyon17/cellpose_metadata.csv"
-    output_h5_path = "/Users/andreagrandi/Developer/bio_project/src/bio_project/feature_extraction/output_feats/concatenated_features.h5"
+    output_pt_path = "/Users/andreagrandi/Developer/bio_project/src/bio_project/feature_extraction/output_feats/concatenated_features.pt"
 
     arg = argparse.ArgumentParser()
     arg.add_argument("--checkpoint_path", type=str, default=checkpoint_path)
     arg.add_argument("--image_dir", type=str, default=image_dir)
     arg.add_argument("--numerical_features_path", type=str, default=numerical_features_path)
-    arg.add_argument("--output_h5_path", type=str, default=output_h5_path)
+    arg.add_argument("--output_pt_path", type=str, default=output_pt_path)
     args = arg.parse_args()
 
     model = load_dino_model(args.checkpoint_path)
@@ -100,10 +98,10 @@ def main():
     print("Feature concatenation...")
     concatenated_features = concatenate_features(visual_features, args.numerical_features_path)
 
-    # Saving features to h5
-    print("Saving features to h5...")
-    save_features_to_h5(concatenated_features, args.output_h5_path)
-    print(f"Feature saved in {args.output_h5_path}")
+    # Saving features 
+    print("Saving features to pt...")
+    save_features_to_pt(concatenated_features, args.output_pt_path)
+    print(f"Feature saved in {args.output_pt_path}")
 
 
 if __name__ == "__main__":
