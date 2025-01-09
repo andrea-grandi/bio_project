@@ -1,0 +1,35 @@
+\begin{thebibliography}{1}
+
+\bibitem{litjens2017survey}
+Geert Litjens, Thijs Kooi, Babak~Ehteshami Bejnordi, et~al.
+\newblock A survey on deep learning in medical image analysis.
+\newblock {\em Medical image analysis}, 42:60--88, 2017.
+
+\bibitem{campanella2019clinical}
+Gabriele Campanella, Matthew~G Hanna, Liron Geneslaw, et~al.
+\newblock Clinical-grade computational pathology using weakly supervised deep
+  learning on whole slide images.
+\newblock {\em Nature medicine}, 25(8):1301--1309, 2019.
+
+\bibitem{ilse2018attention}
+Maximilian Ilse, Jakub~M Tomczak, and Max Welling.
+\newblock Attention-based deep multiple instance learning.
+\newblock {\em arXiv preprint arXiv:1802.04712}, 2018.
+
+\bibitem{lu2021clam}
+Ming~Y Lu, Drew~FK Williamson, Tiffany~Y Chen, et~al.
+\newblock Data-efficient and weakly supervised computational pathology on
+  whole-slide images.
+\newblock {\em Nature Biomedical Engineering}, 5(6):555--570, 2021.
+
+\bibitem{stringer2021cellpose}
+Carsen Stringer, Tim Wang, Michael Michaelos, and Marius Pachitariu.
+\newblock Cellpose: a generalist algorithm for cellular segmentation.
+\newblock {\em Nature methods}, 18(1):100--106, 2021.
+
+\bibitem{caron2021emerging}
+Mathilde Caron, Hugo Touvron, Ishan Misra, et~al.
+\newblock Emerging properties in self-supervised vision transformers.
+\newblock {\em arXiv preprint arXiv:2104.14294}, 2021.
+
+\end{thebibliography}

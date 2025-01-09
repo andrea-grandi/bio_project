@@ -19,7 +19,7 @@ import openslide
 import torchvision.transforms as transforms
 import submitit
 import argparse
-from datasets.dataset_h5 import Dataset_All_Bags, Whole_Slide_Bag_FP
+from CLAM.dataset_modules.dataset_h5 import Dataset_All_Bags, Whole_Slide_Bag_FP
 from torch.utils.data import DataLoader
 
 # Check the device

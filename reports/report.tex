@@ -11,6 +11,7 @@
 \usepackage{hyperref} % Per collegamenti ipertestuali
 \usepackage{titlesec} % Per personalizzare i titoli
 \usepackage{abstract} % Per formattare l'abstract
+\usepackage{cite} 
 
 % Impostazioni dei titoli delle sezioni
 \titleformat{\section}{\Large\bfseries}{\thesection.}{1em}{}
@@ -37,26 +38,33 @@
 % Abstract
 \begin{abstract}
 \noindent 
-
+The visual examination of histopathological images is fundamental for cancer diagnosis, with pathologists analyzing sections at multiple magnifications to discern tumors cells. However, existing attention-based multiple instance learning (MIL) models used for analyzing Whole Slide Images (WSIs) in cancer diagnostic often overlook the contextual information of tumor and numerical features, leading to misclassifications. To address this, we propose a model for catching pre-contextual informations and increase interpretability. This method focus on extract numerical features from WSIs, leveraging semantic segmentation techniques. Then, the visual and numerical features are feed into a MIL model for classification. We evaluate our model on subtyping non-small cell lung cancer (TCGA-NSCLC) and detecting lymph node (CAMELYON16 and CAMELYON17) metastasis, achieving test AUCs of (INSERIRE I VALORI DOPO EVALUATION) respectively. 
 
 \end{abstract}
 
-% Introduzione
 \section{Introduction}
+In recent years, computational pathology has become an essential tool for advancing cancer research, particularly in extracting meaningful insights from Whole Slide Images (WSIs). These large, high-resolution images hold a wealth of information about tissue architecture and cellular composition, making them invaluable for tasks such as cancer diagnosis and prognosis. However, analyzing WSIs poses significant challenges due to their size, heterogeneity, and the need for detailed annotations, which are often scarce. Addressing these challenges requires innovative methodologies that can leverage both visual and numerical features from WSIs \cite{litjens2017survey, campanella2019clinical}.
+
+Multiple Instance Learning (MIL) has emerged as a promising paradigm for tasks involving WSIs, where each slide is treated as a bag containing multiple patches, or instances, and the goal is to predict slide-level outcomes based on patch-level information \cite{ilse2018attention, campanella2019clinical}. Our work builds on this framework, introducing a novel approach that combines numerical and visual features to enhance the predictive power of MIL models.
+
+To achieve this, we propose a pipeline that integrates several cutting-edge tools and techniques. First, we preprocess WSIs using the CLAM framework to generate patches that preserve critical visual information \cite{lu2021clam}. We then employ Cellpose, a robust segmentation algorithm, to extract numerical features such as cell counts and density from each patch \cite{stringer2021cellpose}. To capture visual features, we utilize DINO, a self-supervised vision transformer, which generates embeddings representing the visual content of the patches \cite{caron2021emerging}. By concatenating these visual and numerical features, we construct a richer representation of each patch.
+
+Our key innovation lies in modifying the BufferMIL algorithm to incorporate these concatenated embeddings, allowing the model to assign greater importance to patches with a high cell count while maintaining sensitivity to critical regions indicative of cancer. This approach aims to improve the model's ability to identify key patterns and associations within WSIs, ultimately enhancing its predictive performance.
+
+This paper is structured as follows. Section \ref{related} reviews the relevant literature on MIL and its applications in computational pathology. Section \ref{methods} details our methodology, including preprocessing, feature extraction, and the proposed modifications to BufferMIL. Section \ref{results} presents our experimental setup, results, and the implications of our findings and potential future directions. By integrating numerical and visual features into the MIL framework, our work seeks to contribute to the growing field of computational pathology and provide a more comprehensive understanding of WSIs.
+The source-code is available at \url{https://github.com/andrea-grandi/bio_project}
 
 
-\section{Related Work}
+\section{Related Work} \label{related}
 
+\section{Methods} \label{methods}
 
-\section{Dataset}
+\section{Experiments and Results} \label{results}
 
-\section{Methods}
+\section{Conclusions} \label{conclusions}
 
-\section{Experiments and Results}
-
-\section{Conclusions}
-
-\section{References}
+\bibliographystyle{unsrt}
+\bibliography{references}
 
 
 
