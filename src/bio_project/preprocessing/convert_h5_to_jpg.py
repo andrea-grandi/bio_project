@@ -23,8 +23,7 @@ from CLAM.dataset_modules.dataset_h5 import Dataset_All_Bags, Whole_Slide_Bag_FP
 from torch.utils.data import DataLoader
 
 # Check the device
-device = torch.device(
-    'cuda') if torch.cuda.is_available() else torch.device('cpu')
+device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 
 # Define validation transforms
 trnsfrms_val = transforms.Compose(
@@ -61,13 +60,10 @@ def process(bag_candidate_idx, args):
     # output_path = os.path.join(args.feat_dir, 'h5_files', bag_name)
     time_start = time.time()
     wsi = openslide.open_slide(slide_file_path)
-    save_patches(h5_file_path, output_path=output_path_slide,
-                 wsi=wsi, target_patch_size=-1)
+    save_patches(h5_file_path, output_path=output_path_slide, wsi=wsi, target_patch_size=args.target_patch_size)
     time_stop = time.time()
 
-
-def save_patches(file_path, output_path, wsi, target_patch_size,
-                 batch_size=160):
+def save_patches(file_path, output_path, wsi, target_patch_size, batch_size=160):
     """
     Function to save patches from a bag (.h5 file) and store them as images.
 
@@ -78,24 +74,26 @@ def save_patches(file_path, output_path, wsi, target_patch_size,
         target_patch_size (int): Custom defined, rescaled image size before embedding.
         batch_size (int): Batch size for computing features in batches.
     """
-    dataset = Whole_Slide_Bag_FP(file_path=file_path, wsi=wsi,
-                                 target_patch_size=target_patch_size, custom_transforms=trnsfrms_val)
+    dataset = Whole_Slide_Bag_FP(file_path=file_path, 
+                                 wsi=wsi,
+                                 custom_transforms=trnsfrms_val,
+                                 target_patch_size=target_patch_size)
     x, y = dataset[0]
-    kwargs = {'num_workers': 4,
-              'pin_memory': True} if device.type == "cuda" else {}
+    kwargs = {'num_workers': 4, 'pin_memory': True} if device.type == "cuda" else {}
     loader = DataLoader(dataset=dataset, batch_size=batch_size, **kwargs)
+    print("batch size: " + str(batch_size))
     mode = 'w'
     transform = transforms.ToPILImage()
     level = dataset.patch_level
     output_path = os.path.join(output_path, str(level))
     os.makedirs(output_path, exist_ok=True)
-    print("tot" + str(len(dataset)))
+    print("tot: " + str(len(dataset)))
+
     # Iterate over batches and save patches as images
     for count, (batch, coords) in enumerate(loader):
         print(count)
         for image, cc in zip(batch, coords):
-            imagepath = os.path.join(
-                output_path, "_x_"+str(int(cc[0]))+"_y_"+str(int(cc[1]))+".jpg")
+            imagepath = os.path.join(output_path, "_x_"+str(int(cc[0]))+"_y_"+str(int(cc[1]))+".jpg")
             if os.path.isfile(imagepath):
                 print("skip")
                 continue
@@ -126,8 +124,8 @@ if __name__ == '__main__':
     parameters = [args for i in range(total)]
 
     # Configure the executor for parallel execution
-    executor = submitit.AutoExecutor("logs/")
-    executor.update_parameters(slurm_partition="prod", name="data_prep",
-                               slurm_time=600, mem_gb=15, slurm_array_parallelism=5)
-    jobs = executor.map_array(process, candidates, parameters)
-    # process(0,args)
+    #executor = submitit.AutoExecutor("logs/")
+    #executor.update_parameters(slurm_partition="prod", name="data_prep",
+    #                           slurm_time=600, mem_gb=15, slurm_array_parallelism=5)
+    #jobs = executor.map_array(process, candidates, parameters)
+    process(0, args)

@@ -1,0 +1,6 @@
+submitit INFO (2025-01-10 09:53:37,306) - Starting with JobEnvironment(job_id=13530, hostname=MacBook-Pro-di-Andrea.local, local_rank=0(1), node=0(1), global_rank=0(1))
+submitit INFO (2025-01-10 09:53:37,306) - Loading pickle: /Users/andreagrandi/Developer/bio_project/src/bio_project/preprocessing/logs/13530_submitted.pkl
+
+progress: 0/1
+slide_404
+submitit ERROR (2025-01-10 09:53:38,567) - Submitted job triggered an exception

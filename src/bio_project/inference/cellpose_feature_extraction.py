@@ -1,13 +1,10 @@
 import os
 import subprocess
 
-def cellpose_feature_extraction(input_dir: str="/Users/andreagrandi/Developer/bio_project/src/bio_project/inference/input_patches", 
-                                output_csv: str="/Users/andreagrandi/Developer/bio_project/src/bio_project/inference/metadata"):
+def cellpose_feature_extraction(input_dir, output_csv):
   """
   Cellpose numerical feature extraction
   """
-  os.makedirs(output_csv, exist_ok=True)
-
   script_path = "/Users/andreagrandi/Developer/bio_project/src/bio_project/preprocessing/cellpose_segmentation.py"
   
   command = [

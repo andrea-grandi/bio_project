@@ -1,0 +1,22 @@
+submitit ERROR (2025-01-10 09:54:38,748) - Submitted job triggered an exception
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/opt/anaconda3/envs/bio/lib/python3.11/site-packages/submitit/core/_submit.py", line 11, in <module>
+    submitit_main()
+  File "/opt/anaconda3/envs/bio/lib/python3.11/site-packages/submitit/core/submission.py", line 76, in submitit_main
+    process_job(args.folder)
+  File "/opt/anaconda3/envs/bio/lib/python3.11/site-packages/submitit/core/submission.py", line 69, in process_job
+    raise error
+  File "/opt/anaconda3/envs/bio/lib/python3.11/site-packages/submitit/core/submission.py", line 55, in process_job
+    result = delayed.result()
+             ^^^^^^^^^^^^^^^^
+  File "/opt/anaconda3/envs/bio/lib/python3.11/site-packages/submitit/core/utils.py", line 137, in result
+    self._result = self.function(*self.args, **self.kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/andreagrandi/Developer/bio_project/src/bio_project/preprocessing/convert_h5_to_jpg.py", line 63, in process
+    save_patches(h5_file_path, output_path=output_path_slide,
+  File "/Users/andreagrandi/Developer/bio_project/src/bio_project/preprocessing/convert_h5_to_jpg.py", line 80, in save_patches
+    dataset = Whole_Slide_Bag_FP(file_path=file_path, wsi=wsi,
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: Whole_Slide_Bag_FP.__init__() got an unexpected keyword argument 'target_patch_size'
