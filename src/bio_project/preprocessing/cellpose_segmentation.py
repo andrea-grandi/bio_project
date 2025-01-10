@@ -18,7 +18,7 @@ def process_patches(input_dir, output_csv, channels=None, diameter=None, model_t
     # Recursively find all .jpg files in the input directory
     for root, _, files in os.walk(input_dir):
         for file in files:
-            if file.lower().endswith('.jpg'):
+            if file.lower().endswith(('.png', '.jpg', '.jpeg', '.tiff', '.tif')):
                 patch_path = os.path.join(root, file)
 
                 # Load the image
