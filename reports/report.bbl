@@ -32,4 +32,25 @@ Mathilde Caron, Hugo Touvron, Ishan Misra, et~al.
 \newblock Emerging properties in self-supervised vision transformers.
 \newblock {\em arXiv preprint arXiv:2104.14294}, 2021.
 
+\bibitem{10.1007/978-3-031-43153-1_1}
+Gianpaolo Bontempo, Luca Lumetti, Angelo Porrello, Federico Bolelli, Simone
+  Calderara, and Elisa Ficarra.
+\newblock Buffer-mil: Robust multi-instance learning with a buffer-based
+  approach.
+\newblock In {\em Image Analysis and Processing – ICIAP 2023: 22nd
+  International Conference, ICIAP 2023, Udine, Italy, September 11–15, 2023,
+  Proceedings, Part II}, page 1–12, Berlin, Heidelberg, 2023.
+  Springer-Verlag.
+
+\bibitem{fourkioti2023camil}
+Olga Fourkioti, Matt~De Vries, Chen Jin, Daniel~C. Alexander, and Chris Bakal.
+\newblock Camil: Context-aware multiple instance learning for cancer detection
+  and subtyping in whole slide images, 2023.
+
+\bibitem{WANG2024109826}
+Xunping Wang and Wei Yuan.
+\newblock Nuclei-level prior knowledge constrained multiple instance learning
+  for breast histopathology whole slide image classification.
+\newblock {\em iScience}, 27(6):109826, 2024.
+
 \end{thebibliography}
