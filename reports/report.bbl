@@ -1,9 +1,15 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
 
-\bibitem{litjens2017survey}
-Geert Litjens, Thijs Kooi, Babak~Ehteshami Bejnordi, et~al.
-\newblock A survey on deep learning in medical image analysis.
-\newblock {\em Medical image analysis}, 42:60--88, 2017.
+\bibitem{8507932}
+{Herrera, Francisco and Ventura, Sebastián and Bello, Rafael and Cornelis,
+  Chris and Zafra, Amelia and Sánchez-Tarragó, Dánel and Vluymans, Sarah}.
+\newblock {\em {Multiple instance learning : foundations and algorithms}}.
+\newblock {Springer}, {2016}.
+
+\bibitem{ilse2018attention}
+Maximilian Ilse, Jakub~M Tomczak, and Max Welling.
+\newblock Attention-based deep multiple instance learning.
+\newblock {\em arXiv preprint arXiv:1802.04712}, 2018.
 
 \bibitem{campanella2019clinical}
 Gabriele Campanella, Matthew~G Hanna, Liron Geneslaw, et~al.
@@ -11,10 +17,10 @@ Gabriele Campanella, Matthew~G Hanna, Liron Geneslaw, et~al.
   learning on whole slide images.
 \newblock {\em Nature medicine}, 25(8):1301--1309, 2019.
 
-\bibitem{ilse2018attention}
-Maximilian Ilse, Jakub~M Tomczak, and Max Welling.
-\newblock Attention-based deep multiple instance learning.
-\newblock {\em arXiv preprint arXiv:1802.04712}, 2018.
+\bibitem{litjens2017survey}
+Geert Litjens, Thijs Kooi, Babak~Ehteshami Bejnordi, et~al.
+\newblock A survey on deep learning in medical image analysis.
+\newblock {\em Medical image analysis}, 42:60--88, 2017.
 
 \bibitem{lu2021clam}
 Ming~Y Lu, Drew~FK Williamson, Tiffany~Y Chen, et~al.
