@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
-from bio_project.utils.losses import *
-from dropout import dropout_node
+from utils.losses import *
+from .dropout import dropout_node
 
 
 class Baseline(nn.Module):

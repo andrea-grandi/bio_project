@@ -38,6 +38,20 @@ Mathilde Caron, Hugo Touvron, Ishan Misra, et~al.
 \newblock Emerging properties in self-supervised vision transformers.
 \newblock {\em arXiv preprint arXiv:2104.14294}, 2021.
 
+\bibitem{conf/midl/SharmaSEMSB21}
+Yash Sharma, Aman Shrivastava, Lubaina Ehsan, Christopher~A. Moskaluk, Sana
+  Syed, and Donald~E. Brown.
+\newblock Cluster-to-conquer: A framework for end-to-end multi-instance
+  learning for whole slide image classification.
+\newblock In Mattias~P. Heinrich, Qi~Dou, Marleen de~Bruijne, Jan Lellmann,
+  Alexander Schlaefer, and Floris Ernst, editors, {\em MIDL}, volume 143 of
+  {\em Proceedings of Machine Learning Research}, pages 682--698. PMLR, 2021.
+
+\bibitem{li2021dualstreammultipleinstancelearning}
+Bin Li, Yin Li, and Kevin~W. Eliceiri.
+\newblock Dual-stream multiple instance learning network for whole slide image
+  classification with self-supervised contrastive learning, 2021.
+
 \bibitem{10.1007/978-3-031-43153-1_1}
 Gianpaolo Bontempo, Luca Lumetti, Angelo Porrello, Federico Bolelli, Simone
   Calderara, and Elisa Ficarra.

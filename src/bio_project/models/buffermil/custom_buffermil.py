@@ -2,7 +2,7 @@ import torch
 from sklearn.preprocessing import MinMaxScaler
 
 from models.utils.basemodel import Baseline
-from models.utils.modules import FCLayer, BClassifierBuffer, MILNetBuffer, init
+from models.utils.buffer import FCLayer, BClassifierBuffer, MILNetBuffer, init
 
 
 class Buffermil(Baseline):
