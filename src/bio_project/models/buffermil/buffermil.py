@@ -1,16 +1,3 @@
-"""
-@inproceedings{Bontempo2023_MICCAI,
-    author={Bontempo, Gianpaolo and Porrello, Angelo and Bolelli, Federico and Calderara, Simone and Ficarra, Elisa},
-    title={{DAS-MIL: Distilling Across Scales for MIL Classification of Histological WSIs}},
-    booktitle={Medical Image Computing and Computer Assisted Intervention – MICCAI 2023},
-    pages={248--258},
-    year=2023,
-    month={Oct},
-    publisher={Springer},
-    doi={https://doi.org/10.1007/978-3-031-43907-0_24},
-    isbn={978-3-031-43906-3}
-}
-"""
 import torch
 from sklearn.preprocessing import MinMaxScaler
 
