@@ -102,13 +102,15 @@ target/
 # WSI images
 *.svs
 *.tif
+*.tiff
 
 # images
 *.png
+*.jpg
 
 # models
-*.pt
-*.pth
+#*.pt
+#*.pth
 
 # ZIP files
 *.zip
