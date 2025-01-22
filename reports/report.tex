@@ -6,12 +6,20 @@
 \geometry{a4paper, left=1.5cm, right=1.5cm, top=2cm, bottom=2cm}
 
 % Pacchetti aggiuntivi
-\usepackage{graphicx} % Per inserire immagini
-\usepackage{amsmath, amssymb} % Per simboli matematici
+\usepackage{graphicx} 
 \usepackage{hyperref} % Per collegamenti ipertestuali
 \usepackage{titlesec} % Per personalizzare i titoli
 \usepackage{abstract} % Per formattare l'abstract
 \usepackage{cite} 
+
+\usepackage{url}
+
+\usepackage{dsfont}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{wrapfig} % Include this line in your preamble
+\usepackage{float}
 
 % Impostazioni dei titoli delle sezioni
 \titleformat{\section}{\Large\bfseries}{\thesection.}{1em}{}
@@ -73,6 +81,81 @@ Building upon the attention-based methodologies of frameworks like BufferMIL, Co
 %In summary, the integration of prior knowledge into MIL frameworks, exemplified by BufferMIL, CAMIL, and NPKC-MIL, represents a paradigm shift. These models enhance both classification performance and interpretability, offering promising tools for computational pathology and personalized medicine.
 
 \section{Methods} \label{methods}
+
+In this section, we detail the methodology employed in our study, focusing on the integration of numerical and visual features into an enhanced MIL framework for WSI analysis.
+
+\subsection{Patch Extraction and Preprocessing}
+
+In our study, we employed the CLAM (Computational Pathology Learning and Analysis Methods) framework to efficiently extract patches from Whole Slide Images (WSIs) at a magnification of 20x. This magnification was chosen for its balance between detail and computational manageability, providing sufficient resolution for histopathological analysis. The extraction process involved several key steps:
+
+\begin{itemize}
+    \item \textbf{Patch Extraction with CLAM}: CLAM was used to divide the large WSIs into smaller, manageable patches. This framework is designed to handle the scale and complexity of WSIs by extracting patches at specified magnifications, in this case, 20x.
+
+    \item \textbf{Otsu's Thresholding}: To segment the tissue areas from non-tissue regions within each patch, we applied Otsu's thresholding method. Otsu's algorithm automatically determines the optimal threshold value to separate the foreground (tissue) from the background, based on the image's histogram. This step is crucial for focusing the analysis on relevant tissue regions and reducing noise from non-tissue areas.
+
+    \item \textbf{Storage in .h5 Format}: The thresholded patches were stored in .h5 format by CLAM. This format is efficient for storing large datasets and includes the processed images along with any associated metadata.
+
+    \item \textbf{Conversion to .jpg Format}: For compatibility with standard image processing pipelines and ease of use in downstream processing, we converted the .h5 files to .jpg format. This conversion ensures that the patches can be easily integrated into various image processing libraries and neural network models.
+\end{itemize}
+
+The choice of Otsu's thresholding was motivated by its effectiveness in segmenting histopathological images, while CLAM was selected for its efficiency in handling large WSIs and extracting patches at different magnifications. The conversion to .jpg format was necessary to maintain compatibility with widely used image processing tools, with minimal impact on the quality of the patches for feature extraction.
+
+\begin{figure*}[!htb]
+\centering
+\includegraphics[width=0.6\textwidth, height=8cm]{images/cellpose.png}
+\caption{\textbf{Model architecture. a}, Procedure for transforming manually annotated masks into a vector flow representation that can be predicted
+by a neural network. A simulated diffusion process started at the center of the mask is used to derive spatial gradients that point towards the
+center of the cell, potentially indirectly around corners. The X and Y gradients are combined into a single normalized direction from 0 to 360.
+\textbf{b}, Example spatial flows for cells from the training dataset. \textbf{cd}, A neural network is trained to predict the horizontal and vertical flows, as well
+as whether a pixel belongs to any cell. The three predicted maps are combined into a flow field. \textbf{d} shows the details of the neural network
+which contains a standard backbone neural network that downsamples and then upsamples the feature maps, contains skip connections
+between layers of the same size, and global skip connections from the image styles, computed at the lowest resolution, to all the successive
+computations. \textbf{e}, At test time, the predicted flow fields are used to construct a dynamical system with fixed points whose basins of attraction
+represent the predicted masks. Informally, every pixel ”follows the flows” along the predicted flow fields towards their eventual fixed point. \textbf{f}, All
+the pixels that converge to the same fixed point are assigned to the same mask.} 
+\end{figure*}
+
+\subsection{Feature Extraction}
+
+Our approach involves the extraction of both visual and numerical features from the patches.
+
+\subsubsection{Visual Feature Extraction with DINO}
+
+We utilized DINO (Data-Independent Neighborhood Occupancy) \cite{caron2021emerging}, a self-supervised vision transformer, to extract high-dimensional visual embeddings from the patches. DINO is particularly suited for this task due to its ability to capture rich visual information without requiring labeled data. The architecture of DINO is based on the ViT (Vision Transformer) \cite{dosovitskiy2020image}, which processes images by dividing them into patches and passing them through a series of transformer encoder layers. 
+
+DINO enhances the self-supervised learning process by introducing teacher and student networks, where the teacher network provides pseudo-labels for the student network. This approach allows the model to learn robust representations by minimizing the distance between the predictions of the student and teacher networks. 
+
+To extract the visual embeddings, we first preprocessed the image patches by resizing them to a fixed resolution compatible with the DINO model. We then fed these patches into the pre-trained DINO model to obtain the embeddings from a specific layer, which were used as the primary input for our MIL model. These embeddings capture the intricate visual details within each patch, providing a robust representation for subsequent analysis.
+
+\subsubsection{Numerical Feature Extraction with Cellpose}
+
+To incorporate numerical features, we employed Cellpose \cite{stringer2021cellpose}, a state-of-the-art segmentation algorithm, to extract nuclei-level attributes from the patches. Cellpose is designed to segment nuclei in histopathological images with high accuracy, enabling the computation of numerical features such as cell density and morphological diversity.
+
+The segmentation process involves several steps. First, the image patches are preprocessed to enhance contrast and remove noise. Cellpose then applies a U-Net architecture \cite{ronneberger2015u} to predict cell boundaries and nuclei centers. Additionally, Cellpose predicts flow vectors, which are crucial for accurately segmenting overlapping or touching cells. These flow vectors represent the direction and magnitude from cell centers to the edges, aiding in the precise identification of individual cells.
+
+From these predictions, we extracted numerical features including cell density (number of cells per unit area), average nucleus area, and morphological diversity (measured using shape descriptors such as circularity and eccentricity). To further enhance the feature set, we derived features from the flow vectors, such as the mean and variance of flow directions and magnitudes within each patch. These flow-based features provide additional context about the cellular arrangement and organization.
+
+We concatenated these numerical features with the visual embeddings from DINO to create a comprehensive representation of each patch, enhancing the discriminative power of our model. To ensure effective integration, we normalized the features, allowing them to contribute equally to the model's performance.
+
+In summary, Cellpose not only segments cells but also provides flow vector information, which we leveraged to extract additional numerical features. This combined approach offers a more holistic representation of the cellular composition within each patch, complementing the visual information extracted from the images.
+
+
+
+\subsubsection{Geometry Dataset Conversion}
+
+To integrate the extracted features into the BufferMIL framework, we converted the data into a geometry dataset format, specifically into a DataBatch structure. This conversion is essential for ensuring compatibility with the input requirements of BufferMIL, which expects data in a specific format that includes both visual and numerical features.
+
+The DataBatch structure organizes the data into batches, where each batch contains the concatenated features of multiple patches. We preprocessed the features by normalizing the numerical attributes to have zero mean and unit variance, ensuring that they are on a similar scale to the visual embeddings. We also ensured that the data is appropriately shuffled and split into training, validation, and test sets.
+
+This conversion process involved writing custom scripts to read the extracted features, perform the necessary preprocessing, and organize the data into the required format. By doing so, we enabled the BufferMIL model to effectively process the combined visual and numerical features, leveraging both types of information for improved classification performance.
+
+\subsection{BufferMIL Adaptation}
+
+BufferMIL \cite{10.1007/978-3-031-43153-1_1} is a MIL framework that maintains a buffer of critical instances to improve model generalization. In our adaptation, we modify BufferMIL to incorporate the enriched feature representations (visual embeddings + numerical features). Specifically, we assign higher importance to patches with higher cell density or other critical numerical features, thereby enhancing the model's focus on diagnostically relevant regions.
+
+\subsubsection{Attention Mechanism}
+
+We enhance the attention mechanism in BufferMIL to account for the combined visual and numerical features. The attention scores are computed based on both the visual embeddings and the numerical attributes, ensuring that the model weighs patches according to their diagnostic significance.
 
 \section{Experiments and Results} \label{results}
 
