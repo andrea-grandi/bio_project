@@ -104,6 +104,8 @@ target/
 *.tif
 *.tiff
 
+*.h5
+
 # images
 *.png
 *.jpg
