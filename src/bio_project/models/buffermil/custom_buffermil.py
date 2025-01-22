@@ -5,9 +5,9 @@ from models.utils.basemodel import Baseline
 from models.utils.buffer import FCLayer, BClassifierBuffer, MILNetBuffer, init
 
 
-class Buffermil(Baseline):
+class CustomBuffermil(Baseline):
     def __init__(self, args, state_dict_weights):
-        super(Buffermil, self).__init__(args, state_dict_weights)
+        super(CustomBuffermil, self).__init__(args, state_dict_weights)
         
         milfc, milbag = FCLayer(self.c_in, self.classes), BClassifierBuffer(self.c_in, self.classes)
         self.mil = MILNetBuffer(milfc, milbag)
