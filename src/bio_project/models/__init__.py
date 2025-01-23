@@ -10,10 +10,12 @@ from models.buffermil.custom_buffermil import CustomBuffermil
 
 # Dictionary of multi-scale models
 
+"""
 multi_scales_models = {
     "DASMIL":  {"model": DASMIL, "kl": "lower", "target": "higher"},
     # "hipt": {"model":HIPT_LGP_FC,"kl":None,"target":"higher"},
 }
+"""
 
 # Dictionary of single-scale models
 single_scales_models = {
@@ -44,7 +46,7 @@ def selectModel(args):
         state_dict_weights= None
     print("model "+ args.modeltype)
     if len(args.scale)>1:
-        d= multi_scales_models[args.modeltype]
+        d = multi_scales_models[args.modeltype]
     else:
         d = single_scales_models[args.modeltype]
 
