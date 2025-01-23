@@ -1,4 +1,4 @@
-from utilsmil4wsi.test import test
+from test import test
 from torch.nn import BCEWithLogitsLoss
 import torch
 import os

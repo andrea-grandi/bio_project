@@ -9,7 +9,7 @@ import pandas as pd
 from utils.parser import get_args
 from utils.datasets import get_loaders
 import submitit
-from models.init import selectModel
+from models import selectModel
 import joblib
 # Ensure that all operations are deterministic on GPU (if used) for reproducibility
 
