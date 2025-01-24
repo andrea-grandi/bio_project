@@ -80,8 +80,8 @@ class CustomBuffermil(Baseline):
                     
                     # Combine the features with A, e.g., using a weighted sum
                     # We can adjust the weights as needed
-                    weights = torch.tensor([0.5, 0.25, 0.25]).cuda()
-                    combined_score = weights[0] * A.cpu() + weights[1] * num_cells_norm.cpu() + weights[2] * mean_cell_area_norm.cpu()
+                    weights = torch.tensor([0.5, 0.25, 0.25]).cpu()
+                    combined_score = weights[0] * A + weights[1] * num_cells_norm + weights[2] * mean_cell_area_norm
                     
                     self.storeBuffer(x, combined_score, self.args.ntop)
 
