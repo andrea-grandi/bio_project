@@ -16,7 +16,7 @@ from argparse import Namespace
 import time
 import tqdm
 
-data_root = "/Users/andreagrandi/Developer/bio_project/src/bio_project/feature_extraction/output_feats/feats/processed"
+data_root = "/Users/andreagrandi/Developer/bio_project/src/bio_project/feature_extraction/final_embeddings/processed"
 
 
 # @title Dataset
@@ -41,6 +41,5 @@ if __name__ == "__main__":
     test_loader=DataLoader(test_dataset,batch_size=1,shuffle=True)
 
     for batch in train_loader:
-        print(batch)
-        break
+        print(batch.y)
     

@@ -139,7 +139,7 @@ class MyOwnDataset(Dataset):
                     edge_index_filtered=edge_index_filtered,
                     childof=torch.LongTensor(patch_childof),
                     level=torch.LongTensor(patch_level),
-                    y=torch.LongTensor([int(os.path.basename(bag).split("_")[-1] == "tumor")]),
+                    y=torch.LongTensor([int(os.path.basename(bag).split("_")[-1])]),
                     name=os.path.basename(bag),
                     patch_label=torch.LongTensor(patch_label),
                     x_coord=torch.LongTensor(patches["x"]),

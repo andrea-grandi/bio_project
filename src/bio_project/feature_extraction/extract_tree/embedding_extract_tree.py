@@ -369,7 +369,7 @@ def processSlide(start, args):
     # bags_list = glob.glob(bags_path)
     for slideNumber in range(start, start+args.step):
         real_name, id, label, test, down = properties(slideNumber, args.propertiescsv)
-        print(real_name, label, test, down,feats_path)
+        print(real_name, label, test, down, feats_path)
         #print("Real Name", real_name)
         #print("Percorso delle patch:", args.extractedpatchespath)
         #print("Patch trovate:", glob.glob(os.path.join(args.extractedpatchespath, real_name, '*.jpg')))
