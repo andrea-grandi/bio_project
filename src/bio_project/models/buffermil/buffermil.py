@@ -1,8 +1,11 @@
-from .utils import FCLayer,BClassifierBuffer,MILNetBuffer,init
-from .utils2 import dropout_node
-from sklearn.preprocessing import MinMaxScaler
 import torch
+
+from sklearn.preprocessing import MinMaxScaler
+
+from models.utils.buffer import FCLayer,BClassifierBuffer,MILNetBuffer,init
+from models.utils.dropout import dropout_node
 from models.utils.basemodel import Baseline
+
 
 class Buffermil(Baseline):
     def __init__(self, args,state_dict_weights):
