@@ -36,12 +36,12 @@ def main():
    arg.add_argument("--slide_ext", type=str, default=".svs", help="Slide extension (e.g. .svs, .tif)")
 
    # Args for cellpose feature extraction
-   arg.add_argument("--input_cellpose_dir", type=str, default="/Users/andreagrandi/Developer/bio_project/src/bio_project/inference/output_clam/images", help="Where to save the metadata")
-   arg.add_argument("--output_cellpose_csv", type=str, default="/Users/andreagrandi/Developer/bio_project/src/bio_project/inference/metadata/metadata.csv", help="Where to save the metadata")
+   #arg.add_argument("--input_cellpose_dir", type=str, default="/Users/andreagrandi/Developer/bio_project/src/bio_project/inference/output_clam/images", help="Where to save the metadata")
+   #arg.add_argument("--output_cellpose_csv", type=str, default="/Users/andreagrandi/Developer/bio_project/src/bio_project/inference/metadata/metadata.csv", help="Where to save the metadata")
 
    # Args for feature extraction
-   #arg.add_argument("--numerical_features_path", type=str, default="/Users/andreagrandi/Developer/bio_project/src/bio_project/inference/metadata/cellpose_metadata.csv", help="Path to the metadata")
-   #arg.add_argument("--output_pt_path", type=str, default="/Users/andreagrandi/Developer/bio_project/src/bio_project/inference/features/concatenated_features.pt", help="Where to save the features")
+   arg.add_argument("--numerical_features_path", type=str, default="/Users/andreagrandi/Developer/bio_project/src/bio_project/inference/metadata/cellpose_metadata.csv", help="Path to the metadata")
+   arg.add_argument("--output_pt_path", type=str, default="/Users/andreagrandi/Developer/bio_project/src/bio_project/inference/features/concatenated_features.pt", help="Where to save the features")
    
    args = arg.parse_args()
 

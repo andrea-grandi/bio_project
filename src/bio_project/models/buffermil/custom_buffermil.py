@@ -87,8 +87,8 @@ class CustomBuffermil(Baseline):
 
         self.inference = True
 
-    def storeBuffer(self, feats, scores, k):
-        _, m_indices = torch.sort(torch.tensor(scores).cuda(), 0, descending=True)  # sort scores, m_indices in shape N
+    def storeBuffer(self, feats, A, k):
+        _, m_indices = torch.sort(torch.tensor(A).cuda(), 0, descending=True)  # sort scores (A), m_indices in shape N
         m_feats = torch.index_select(feats, dim=0, index=m_indices[:k])  # select top k features
         self.mil.store(m_feats)
 
@@ -97,3 +97,6 @@ class CustomBuffermil(Baseline):
         idx = perm[:k]
         m_feats = feats[idx]
         self.mil.store(m_feats)
+
+    def bufferinference(self, feats):
+        self.mil.bufferinference(feats)
