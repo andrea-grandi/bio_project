@@ -121,3 +121,6 @@ target/
 .virtual_documents/
 
 detectron2/
+
+#Dataset
+#/Users/andreagrandi/Developer/bio_project/src/bio_project/dataset/camelyon17
