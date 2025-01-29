@@ -67,7 +67,7 @@ class Buffermil(Baseline):
                 if (pred>0.2) & (y==1):
                     A=results["higher"][2]
                     A=MinMaxScaler().fit_transform(A.reshape(-1,1).cpu().detach().numpy()).reshape(-1)
-                    self.storeBuffer(x,A,self.args.ntop)
+                    self.storeBuffer(x, A, self.args.ntop)
 
         self.inference=True
 

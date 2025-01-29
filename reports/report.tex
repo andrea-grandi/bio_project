@@ -113,6 +113,7 @@ between layers of the same size, and global skip connections from the image styl
 computations. \textbf{e}, At test time, the predicted flow fields are used to construct a dynamical system with fixed points whose basins of attraction
 represent the predicted masks. Informally, every pixel ”follows the flows” along the predicted flow fields towards their eventual fixed point. \textbf{f}, All
 the pixels that converge to the same fixed point are assigned to the same mask.} 
+\label{cellpose}
 \end{figure*}
 
 \subsection{Feature Extraction}
@@ -121,7 +122,7 @@ Our approach involves the extraction of both visual and numerical features from 
 
 \subsubsection{Visual Feature Extraction with DINO}
 
-We utilized DINO (Data-Independent Neighborhood Occupancy) \cite{caron2021emerging}, a self-supervised vision transformer, to extract high-dimensional visual embeddings from the patches. DINO is particularly suited for this task due to its ability to capture rich visual information without requiring labeled data. The architecture of DINO is based on the ViT (Vision Transformer) \cite{dosovitskiy2020image}, which processes images by dividing them into patches and passing them through a series of transformer encoder layers. 
+We utilized DINO (Data-Independent Neighborhood Occupancy) \cite{caron2021emerging}, a self-supervised vision transformer, to extract high-dimensional visual embeddings from the patches. DINO is particularly suited for this task due to its ability to capture rich visual information without requiring labeled data. The architecture of DINO is based on the ViT (Vision Transformer) (Dosovitskiy et al., 2021) \cite{dosovitskiy2021imageworth16x16words}, which processes images by dividing them into patches and passing them through a series of transformer encoder layers. 
 
 DINO enhances the self-supervised learning process by introducing teacher and student networks, where the teacher network provides pseudo-labels for the student network. This approach allows the model to learn robust representations by minimizing the distance between the predictions of the student and teacher networks. 
 
@@ -129,9 +130,9 @@ To extract the visual embeddings, we first preprocessed the image patches by res
 
 \subsubsection{Numerical Feature Extraction with Cellpose}
 
-To incorporate numerical features, we employed Cellpose \cite{stringer2021cellpose}, a state-of-the-art segmentation algorithm, to extract nuclei-level attributes from the patches. Cellpose is designed to segment nuclei in histopathological images with high accuracy, enabling the computation of numerical features such as cell density and morphological diversity.
+To incorporate numerical features, we employed Cellpose \cite{stringer2021cellpose}, a state-of-the-art segmentation algorithm, to extract nuclei-level attributes from the patches. Cellpose is designed to segment cyto and nuclei in histopathological images with high accuracy, enabling the computation of numerical features such as cell density and morphological diversity.
 
-The segmentation process involves several steps. First, the image patches are preprocessed to enhance contrast and remove noise. Cellpose then applies a U-Net architecture \cite{ronneberger2015u} to predict cell boundaries and nuclei centers. Additionally, Cellpose predicts flow vectors, which are crucial for accurately segmenting overlapping or touching cells. These flow vectors represent the direction and magnitude from cell centers to the edges, aiding in the precise identification of individual cells.
+As we can see in Figure \ref{cellpose}, the segmentation process involves several steps. First, the image patches are preprocessed to enhance contrast and remove noise. Cellpose then applies a U-Net architecture (Ronneberger et al., 2015)\cite{ronneberger2015unetconvolutionalnetworksbiomedical} to predict cell boundaries and nuclei centers. Additionally, Cellpose predicts flow vectors, which are crucial for accurately segmenting overlapping or touching cells. These flow vectors represent the direction and magnitude from cell centers to the edges, aiding in the precise identification of individual cells.
 
 From these predictions, we extracted numerical features including cell density (number of cells per unit area), average nucleus area, and morphological diversity (measured using shape descriptors such as circularity and eccentricity). To further enhance the feature set, we derived features from the flow vectors, such as the mean and variance of flow directions and magnitudes within each patch. These flow-based features provide additional context about the cellular arrangement and organization.
 
