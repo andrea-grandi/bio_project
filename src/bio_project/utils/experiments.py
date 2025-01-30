@@ -1,5 +1,7 @@
 import copy
 import itertools
+
+
 def launch_DASMIL_cam(args):
     args1= copy.copy(args)
     args1.modeltype="DASMIL"
@@ -15,7 +17,6 @@ def launch_DASMIL_cam(args):
     args1.layer_name="GAT"
     args1.residual=False
     return [args1]
-
 
 def launch_DASMIL_lung(args):
     args1= copy.copy(args)
@@ -34,7 +35,6 @@ def launch_DASMIL_lung(args):
     return [args1]
 
 def launch_buffermil(args):
-
     multiscale_hyperparameters = [
         [3],  # ntop
         [10],  # freq,
@@ -47,7 +47,6 @@ def launch_buffermil(args):
     #aggiungere flag per leave one out
     args_list = []
     for element in itertools.product(*multiscale_hyperparameters):
-    
         args1 = copy.copy(args)
         args1.scale = "3"
         args1.tag = "tag_run"

@@ -59,7 +59,7 @@ One limitation of MIL is the assumption that tiles from the same WSI are indepen
 
 In this work, we introduce a novel pipeline that integrates cutting-edge tools and methodologies to overcome these limitations. We preprocess WSIs using the CLAM framework (Lu et al., 2021) \cite{lu2021clam}, ensuring the retention of essential visual features. To extract nuclei-specific numerical features such as cell counts and density, we utilize Cellpose (Stringer et al., 2021) \cite{stringer2021cellpose}, a state-of-the-art segmentation algorithm. Simultaneously, we employ DINO (Caron et al., 2021) \cite{caron2021emerging}, a self-supervised vision transformer, to generate embeddings representing the visual content of each patch. By concatenating these numerical and visual features, we construct a richer, more informative representation for each patch.
 
-Our key innovation lies in adapting the BufferMIL framework to incorporate these enriched embeddings, by assigning greater importance to patches with high cell density or other critical numerical features
+Our key innovation lies in adapting the BufferMIL (Bontempo et al, 2023)\cite{10.1007/978-3-031-43153-1_1} framework to incorporate these enriched embeddings, enhancing interpretability through the extracted numerical features.
 
 %By assigning greater importance to patches with high cell density or other critical numerical features, our model improves sensitivity to diagnostically relevant regions. This dual-feature approach enhances both interpretability and predictive performance, addressing long-standing challenges in WSI classification.
 
@@ -72,7 +72,7 @@ Multiple Instance Learning has revolutionized computational pathology by enablin
 
 One of the first important work in this field was DS-MIL (Li et al., 2021)\cite{li2021dualstreammultipleinstancelearning}. This model utilizes a dual-stream framework, where patches are extracted from different magnifications (e.g., 5× and 20× in their study) of Whole Slide Images. These patches are processed separately for self-supervised contrastive learning. The embeddings obtained from patches at various resolutions are then concatenated to train the MIL aggregator, which assigns an importance or criticality score to each patch. The most critical patch is selected and compared to all others in a one-vs-all manner. This comparison uses a distance metric inspired by attention mechanisms, though it differs significantly by comparing two queries instead of the traditional key-query setup. Finally, the distances are aggregated to generate the final bag-level prediction.
 
-Another work is BufferMIL (Bontempo et al, 2023)\cite{10.1007/978-3-031-43153-1_1}, which is a notable framework that enhances MIL by incorporating explicit domain knowledge for histopathological image analysis, particularly addressing challenges like class imbalance and covariate shift. In this approach, a buffer is maintained to store the most representative instances from each disease-positive slide in the training set. An attention mechanism then compares all instances against this buffer to identify the most critical ones within a given slide. This strategy ensures that the model focuses on the most informative instances, thereby improving its generalization performance. By leveraging a buffer to track critical instances and employing an attention mechanism for comparison, Buffer-MIL effectively mitigates issues related to class imbalance and covariate shift. This approach enhances the model's ability to focus on the most informative patches within WSIs, leading to more accurate and reliable predictions in histopathological image analysis.
+Another work is BufferMIL, which is a notable framework that enhances MIL by incorporating explicit domain knowledge for histopathological image analysis, particularly addressing challenges like class imbalance and covariate shift. In this approach, a buffer is maintained to store the most representative instances from each disease-positive slide in the training set. An attention mechanism then compares all instances against this buffer to identify the most critical ones within a given slide. This strategy ensures that the model focuses on the most informative instances, thereby improving its generalization performance. By leveraging a buffer to track critical instances and employing an attention mechanism for comparison, Buffer-MIL effectively mitigates issues related to class imbalance and covariate shift. This approach enhances the model's ability to focus on the most informative patches within WSIs, leading to more accurate and reliable predictions in histopathological image analysis.
 
 Building upon the attention-based methodologies of frameworks like BufferMIL, Context-Aware MIL (CAMIL) (Fourkioti et al., 2024)\cite{fourkioti2023camil} extends the concept of informed instance selection by introducing neighbor-constrained attention mechanisms. CAMIL leverages spatial dependencies among WSI tiles to achieve superior performance in cancer subtyping and metastasis detection, showcasing the importance of spatial context in WSI analysis. Similarly, the Nuclei-Level Prior Knowledge Constrained MIL (NPKC-MIL) (Wang et al., 2024)\cite{WANG2024109826} highlights the value of combining handcrafted nuclei-level features with deep learning, demonstrating improvements in interpretability and classification accuracy for breast cancer WSIs.
 
@@ -80,29 +80,20 @@ Building upon the attention-based methodologies of frameworks like BufferMIL, Co
 
 %In summary, the integration of prior knowledge into MIL frameworks, exemplified by BufferMIL, CAMIL, and NPKC-MIL, represents a paradigm shift. These models enhance both classification performance and interpretability, offering promising tools for computational pathology and personalized medicine.
 
+\begin{figure}[!htb]
+\centering
+\includegraphics[width=0.4\textwidth, height=12cm]{images/wsi_preprocess.png}
+\caption{Whole Slide Image Preprocessing} 
+\label{wsi_preprocessing}
+\end{figure}
+
 \section{Methods} \label{methods}
 
 In this section, we detail the methodology employed in our study, focusing on the integration of numerical and visual features into an enhanced MIL framework for WSI analysis.
 
-\subsection{Patch Extraction and Preprocessing}
-
-In our study, we employed the CLAM (Computational Pathology Learning and Analysis Methods) framework to efficiently extract patches from Whole Slide Images (WSIs) at a magnification of 20x. This magnification was chosen for its balance between detail and computational manageability, providing sufficient resolution for histopathological analysis. The extraction process involved several key steps:
-
-\begin{itemize}
-    \item \textbf{Patch Extraction with CLAM}: CLAM was used to divide the large WSIs into smaller, manageable patches. This framework is designed to handle the scale and complexity of WSIs by extracting patches at specified magnifications, in this case, 20x.
-
-    \item \textbf{Otsu's Thresholding}: To segment the tissue areas from non-tissue regions within each patch, we applied Otsu's thresholding method. Otsu's algorithm automatically determines the optimal threshold value to separate the foreground (tissue) from the background, based on the image's histogram. This step is crucial for focusing the analysis on relevant tissue regions and reducing noise from non-tissue areas.
-
-    \item \textbf{Storage in .h5 Format}: The thresholded patches were stored in .h5 format by CLAM. This format is efficient for storing large datasets and includes the processed images along with any associated metadata.
-
-    \item \textbf{Conversion to .jpg Format}: For compatibility with standard image processing pipelines and ease of use in downstream processing, we converted the .h5 files to .jpg format. This conversion ensures that the patches can be easily integrated into various image processing libraries and neural network models.
-\end{itemize}
-
-The choice of Otsu's thresholding was motivated by its effectiveness in segmenting histopathological images, while CLAM was selected for its efficiency in handling large WSIs and extracting patches at different magnifications. The conversion to .jpg format was necessary to maintain compatibility with widely used image processing tools, with minimal impact on the quality of the patches for feature extraction.
-
 \begin{figure*}[!htb]
 \centering
-\includegraphics[width=0.6\textwidth, height=8cm]{images/cellpose.png}
+\includegraphics[width=0.65\textwidth, height=8cm]{images/cellpose.png}
 \caption{\textbf{Model architecture. a}, Procedure for transforming manually annotated masks into a vector flow representation that can be predicted
 by a neural network. A simulated diffusion process started at the center of the mask is used to derive spatial gradients that point towards the
 center of the cell, potentially indirectly around corners. The X and Y gradients are combined into a single normalized direction from 0 to 360.
@@ -116,21 +107,43 @@ the pixels that converge to the same fixed point are assigned to the same mask.}
 \label{cellpose}
 \end{figure*}
 
+
+\subsection{Patch Extraction and Preprocessing}
+
+In our study, we employed the CLAM (Computational Pathology Learning and Analysis Methods) framework to efficiently extract patches from Whole Slide Images (WSIs) at a magnification of 20x. This magnification was chosen for its balance between detail and computational manageability, providing sufficient resolution for histopathological analysis. The extraction process involved several key steps as shown in Figure \ref{wsi_preprocessing}:
+
+\begin{itemize}
+    \item \textbf{Patch Extraction with CLAM}: CLAM was used to divide the large WSIs into smaller, manageable patches. This framework is designed to handle the scale and complexity of WSIs by extracting patches at specified magnifications, in this case, 20x.
+
+    \item \textbf{Otsu's Thresholding}: To segment the tissue areas from non-tissue regions within each patch, we applied Otsu's thresholding method. Otsu's algorithm automatically determines the optimal threshold value to separate the foreground (tissue) from the background, based on the image's histogram. This step is crucial for focusing the analysis on relevant tissue regions and reducing noise from non-tissue areas.
+   
+
+    \item \textbf{Storage in .h5 Format}: The thresholded patches were stored in .h5 format by CLAM. This format is efficient for storing large datasets and includes the processed images along with any associated metadata.
+
+    \item \textbf{Conversion to .jpg Format}: For compatibility with standard image processing pipelines and ease of use in downstream processing, we converted the .h5 files to .jpg format. This conversion ensures that the patches can be easily integrated into various image processing libraries and neural network models.
+\end{itemize}
+
+The choice of Otsu's thresholding was motivated by its effectiveness in segmenting histopathological images, while CLAM was selected for its efficiency in handling large WSIs and extracting patches at different magnifications. The conversion to .jpg format was necessary to maintain compatibility with widely used image processing tools, with minimal impact on the quality of the patches for feature extraction.
+
+
 \subsection{Feature Extraction}
 
 Our approach involves the extraction of both visual and numerical features from the patches.
 
 \subsubsection{Visual Feature Extraction with DINO}
 
-We utilized DINO (Data-Independent Neighborhood Occupancy) \cite{caron2021emerging}, a self-supervised vision transformer, to extract high-dimensional visual embeddings from the patches. DINO is particularly suited for this task due to its ability to capture rich visual information without requiring labeled data. The architecture of DINO is based on the ViT (Vision Transformer) (Dosovitskiy et al., 2021) \cite{dosovitskiy2021imageworth16x16words}, which processes images by dividing them into patches and passing them through a series of transformer encoder layers. 
+%We utilized DINO (Data-Independent Neighborhood Occupancy) \cite{caron2021emerging}, a self-supervised vision transformer, to extract high-dimensional visual embeddings from the patches. 
+We utilize DINO (Data-Independent Neighborhood Occupancy) for visual embeddings because is particularly suited for this task due to its ability to capture rich visual information without requiring labeled data. The architecture of DINO is based on the ViT (Vision Transformer) (Dosovitskiy et al., 2021) \cite{dosovitskiy2021imageworth16x16words}, which processes images by dividing them into patches and passing them through a series of transformer encoder layers. 
 
 DINO enhances the self-supervised learning process by introducing teacher and student networks, where the teacher network provides pseudo-labels for the student network. This approach allows the model to learn robust representations by minimizing the distance between the predictions of the student and teacher networks. 
 
 To extract the visual embeddings, we first preprocessed the image patches by resizing them to a fixed resolution compatible with the DINO model. We then fed these patches into the pre-trained DINO model to obtain the embeddings from a specific layer, which were used as the primary input for our MIL model. These embeddings capture the intricate visual details within each patch, providing a robust representation for subsequent analysis.
 
+
+
 \subsubsection{Numerical Feature Extraction with Cellpose}
 
-To incorporate numerical features, we employed Cellpose \cite{stringer2021cellpose}, a state-of-the-art segmentation algorithm, to extract nuclei-level attributes from the patches. Cellpose is designed to segment cyto and nuclei in histopathological images with high accuracy, enabling the computation of numerical features such as cell density and morphological diversity.
+To incorporate numerical features, we employed Cellpose to extract nuclei-level attributes from the patches. Cellpose is designed to segment cyto and nuclei in histopathological images with high accuracy, enabling the computation of numerical features such as cell density and morphological diversity.
 
 As we can see in Figure \ref{cellpose}, the segmentation process involves several steps. First, the image patches are preprocessed to enhance contrast and remove noise. Cellpose then applies a U-Net architecture (Ronneberger et al., 2015)\cite{ronneberger2015unetconvolutionalnetworksbiomedical} to predict cell boundaries and nuclei centers. Additionally, Cellpose predicts flow vectors, which are crucial for accurately segmenting overlapping or touching cells. These flow vectors represent the direction and magnitude from cell centers to the edges, aiding in the precise identification of individual cells.
 
@@ -140,23 +153,37 @@ We concatenated these numerical features with the visual embeddings from DINO to
 
 In summary, Cellpose not only segments cells but also provides flow vector information, which we leveraged to extract additional numerical features. This combined approach offers a more holistic representation of the cellular composition within each patch, complementing the visual information extracted from the images.
 
-
-
 \subsubsection{Geometry Dataset Conversion}
 
 To integrate the extracted features into the BufferMIL framework, we converted the data into a geometry dataset format, specifically into a DataBatch structure. This conversion is essential for ensuring compatibility with the input requirements of BufferMIL, which expects data in a specific format that includes both visual and numerical features.
 
 The DataBatch structure organizes the data into batches, where each batch contains the concatenated features of multiple patches. We preprocessed the features by normalizing the numerical attributes to have zero mean and unit variance, ensuring that they are on a similar scale to the visual embeddings. We also ensured that the data is appropriately shuffled and split into training, validation, and test sets.
 
-This conversion process involved writing custom scripts to read the extracted features, perform the necessary preprocessing, and organize the data into the required format. By doing so, we enabled the BufferMIL model to effectively process the combined visual and numerical features, leveraging both types of information for improved classification performance.
+%This conversion process involved writing custom scripts to read the extracted features, perform the necessary preprocessing, and organize the data into the required format. By doing so, we enabled the BufferMIL model to effectively process the combined visual and numerical features, leveraging both types of information for improved classification performance.
+
+%\begin{figure*}[!htb]
+%\centering
+%\includegraphics[width=0.8\textwidth, height=8cm]{images/buffermil.png}
+%\caption{BufferMIL architecture} 
+%\label{buffermil}
+%\end{figure*}
 
 \subsection{BufferMIL Adaptation}
 
-BufferMIL \cite{10.1007/978-3-031-43153-1_1} is a MIL framework that maintains a buffer of critical instances to improve model generalization. In our adaptation, we modify BufferMIL to incorporate the enriched feature representations (visual embeddings + numerical features). Specifically, we assign higher importance to patches with higher cell density or other critical numerical features, thereby enhancing the model's focus on diagnostically relevant regions.
+To adapt BufferMIL, particularly the buffer selection of critical patches, we have implemented an embedding concatenation approach before incorporating them into the adjacency matrix. 
 
 \subsubsection{Attention Mechanism}
 
-We enhance the attention mechanism in BufferMIL to account for the combined visual and numerical features. The attention scores are computed based on both the visual embeddings and the numerical attributes, ensuring that the model weighs patches according to their diagnostic significance.
+The attention mechanism in BufferMIL is adapted to consider both structural and morphological features of patches. Given an adjacency matrix $A$ extracted from the higher-level representation, we normalize it using min-max scaling:
+
+\begin{equation}
+A = \frac{A - \min(A)}{\max(A) - \min(A)}
+\end{equation}
+
+Additionally, we normalize supplementary extracted features, such as the number of cells per patch, cell density, and mean cell area:
+
+
+The computed scores are then stored in the buffer for selecting the top $n$ critical patches, refining the selection process and enhancing the robustness of the model.
 
 \section{Experiments and Results} \label{results}
 

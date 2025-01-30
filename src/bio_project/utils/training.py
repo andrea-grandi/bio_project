@@ -114,6 +114,7 @@ def train(model: torch.nn.Module,
             loss = model.compute_loss(loss_module_instance, results, bag_label)
             loss.backward()
             optimizer.step()
+            
         end_training = time.time()
         scheduler.step()
 
