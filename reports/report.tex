@@ -36,7 +36,7 @@
 \title{\textbf{Multiple instance learning with pre-contextual knowledge}}
 \author{Andrea Grandi, Daniele Vellani \\
 \texttt{\{275074,196186\}@studenti.unimore.it}}
-\date{Data}
+%\date{Data}
 
 \begin{document}
 
@@ -46,7 +46,7 @@
 % Abstract
 \begin{abstract}
 \noindent 
-The visual examination of histopathological images is a cornerstone of cancer diagnosis, requiring pathologists to analyze tissue sections across multiple magnifications to identify tumor cells and subtypes. However, existing attention-based Multiple Instance Learning (MIL) models for Whole Slide Image (WSI) analysis often neglect contextual and numerical features, resulting in limited interpretability and potential misclassifications. Furthermore, the original MIL formulation incorrectly assumes the patches of the same image to be independent, leading to a loss of spatial context as information flows through the network. Incorporating contextual knowledge into predictions is particularly important given the inclination for cancerous cells to form clusters and the presence of spatial indicators for tumors. To address these limitations, we propose an enhanced MIL framework that integrates pre-contextual numerical information derived from semantic segmentation. Specifically, our approach combines visual features with nuclei-level numerical attributes, such as cell density and morphological diversity, extracted using advanced segmentation tools like Cellpose. These enriched features are then fed into a modified BufferMIL model for WSI classification. We evaluate our method on subtyping non-small cell lung cancer (TCGA-NSCLC) and detecting lymph node metastases (CAMELYON16 and CAMELYON17).
+The visual examination of histopathological images is a cornerstone of cancer diagnosis, requiring pathologists to analyze tissue sections across multiple magnifications to identify tumor cells and subtypes. However, existing attention-based Multiple Instance Learning (MIL) models for Whole Slide Image (WSI) analysis often neglect contextual and numerical features, resulting in limited interpretability and potential misclassifications. Furthermore, the original MIL formulation incorrectly assumes the patches of the same image to be independent, leading to a loss of spatial context as information flows through the network. Incorporating contextual knowledge into predictions is particularly important given the inclination for cancerous cells to form clusters and the presence of spatial indicators for tumors. To address these limitations, we propose an enhanced MIL framework that integrates pre-contextual numerical information derived from semantic segmentation. Specifically, our approach combines visual features with nuclei-level numerical attributes, such as cell density and morphological diversity, extracted using advanced segmentation tools like Cellpose. These enriched features are then fed into a modified BufferMIL model for WSI classification. We evaluate our method on detecting lymph node metastases (CAMELYON16 and CAMELYON17).
 
 \end{abstract}
 
@@ -94,7 +94,7 @@ In this section, we detail the methodology employed in our study, focusing on th
 \begin{figure*}[!htb]
 \centering
 \includegraphics[width=0.65\textwidth, height=8cm]{images/cellpose.png}
-\caption{\textbf{Model architecture. a}, Procedure for transforming manually annotated masks into a vector flow representation that can be predicted
+\caption{\textbf{Cellpose model architecture. a}, Procedure for transforming manually annotated masks into a vector flow representation that can be predicted
 by a neural network. A simulated diffusion process started at the center of the mask is used to derive spatial gradients that point towards the
 center of the cell, potentially indirectly around corners. The X and Y gradients are combined into a single normalized direction from 0 to 360.
 \textbf{b}, Example spatial flows for cells from the training dataset. \textbf{cd}, A neural network is trained to predict the horizontal and vertical flows, as well
@@ -161,29 +161,90 @@ The DataBatch structure organizes the data into batches, where each batch contai
 
 %This conversion process involved writing custom scripts to read the extracted features, perform the necessary preprocessing, and organize the data into the required format. By doing so, we enabled the BufferMIL model to effectively process the combined visual and numerical features, leveraging both types of information for improved classification performance.
 
-%\begin{figure*}[!htb]
-%\centering
-%\includegraphics[width=0.8\textwidth, height=8cm]{images/buffermil.png}
-%\caption{BufferMIL architecture} 
-%\label{buffermil}
-%\end{figure*}
+\begin{figure}[!htb]
+\centering
+\includegraphics[width=\linewidth, height=5cm]{images/buffermil.png}
+\caption{BufferMIL architecture} 
+\label{buffermil_arc}
+\end{figure}
 
-\subsection{BufferMIL Adaptation}
+\subsection{Buffer Adaptation}
 
-To adapt BufferMIL, particularly the buffer selection of critical patches, we have implemented an embedding concatenation approach before incorporating them into the adjacency matrix. 
+%As shown in Figure \ref{buffermil_arc}, the patches (indices) inside the buffer are obtained with a patch-level classifier $cls_{patch}(\cdot)$ as: 
+%%%
+%\begin{align}
+%\text{crit} &= \arg\max \left( \text{cls}_{\text{patch}}(f(x)) \right) \\
+%&= \arg\max \left\{ W_{p} f(x_{0}), \dots, W_{p} f(x_{n}) \right\}
+%\end{align}
+%%%
+%where $W_{p}$ is the weight vector.
 
-\subsubsection{Attention Mechanism}
 
-The attention mechanism in BufferMIL is adapted to consider both structural and morphological features of patches. Given an adjacency matrix $A$ extracted from the higher-level representation, we normalize it using min-max scaling:
+To adapt BufferMIL, particularly the buffer selection of critical patches, we have implemented an embedding concatenation approach before incorporating them into the attention matrix. 
+
+Let $A \in \mathbb{R}^{N \times N}$ be the original attention matrix used in the attention mechanism, where $N$ represents the number of instances in a bag. We define the normalized morphological features as follows:
 
 \begin{equation}
-A = \frac{A - \min(A)}{\max(A) - \min(A)}
+\tilde{C} = \frac{C - \min(C)}{\max(C) - \min(C)},
+\end{equation}
+\begin{equation}
+\tilde{A}{c} = \frac{A{c} - \min(A_{c})}{\max(A_{c}) - \min(A_{c})},
 \end{equation}
 
-Additionally, we normalize supplementary extracted features, such as the number of cells per patch, cell density, and mean cell area:
+where $C$ is the number of detected cells per patch and $A_{c}$ is the mean cell area. The normalized versions, $\tilde{C}$ and $\tilde{A}_{c}$, are then incorporated into the modified attention matrix using a weighted sum:
 
+\begin{equation}
+A' = w_1 A + w_2 \tilde{C} + w_3 \tilde{A}_{c},
+\end{equation}
 
-The computed scores are then stored in the buffer for selecting the top $n$ critical patches, refining the selection process and enhancing the robustness of the model.
+where $w_1, w_2, w_3$ are tunable hyperparameters that balance the contribution of the original attention matrix and the new morphological features.
+
+\subsection{Implementation}
+
+The implementation of our model follows a structured approach proposed in the BufferMIL paper with the additional extracted features. The key steps are:
+
+\begin{enumerate}
+\item \textbf{Model Initialization:} The model initializes the MIL layers using a fully connected layer (\texttt{FCLayer}) and a bag classifier (\texttt{BClassifierBuffer}). The MIL network is initialized with pretrained weights.
+
+\item \textbf{Critical Instance Selection:} A patch-level classifier $\text{clspatch}(\cdot)$ is used to find the index of the most critical patch:
+\begin{align}
+\text{crit} &= \arg\max \left( \text{cls}_{\text{patch}}(f(x)) \right) \notag \\ 
+&= \arg\max \left\{ W_{p} f(x_{0}), \dots, W_{p} f(x_{n}) \right\}
+\end{align}
+where $W_p$ is a weight vector.
+
+\item \textbf{Instance Embedding Aggregation:} Instance embeddings are aggregated into a single bag embedding by computing a linear projection into a query $q_i$ and a value $v_i$ using weight matrices $W_q$ and $W_v$:
+\begin{equation}
+q_i = W_q h_i, \quad v_i = W_v h_i
+\end{equation}
+
+\item \textbf{Attention-Based Scoring:} The query of the most critical instance, $q_{\text{crit}}$, is compared with all other queries using a distance measure $U(\cdot, \cdot)$:
+\begin{equation}
+U(h_i, h_{\text{crit}}) = \frac{\exp(\langle q_i, q_{\text{crit}} \rangle)}{\sum_{k=0}^{N-1} \exp(\langle q_k, q_{\text{crit}} \rangle)}
+\end{equation}
+
+\item \textbf{Bag-Level Embedding:} The final bag score is computed as:
+\begin{equation}
+c_b(B) = W_b \sum_{i=0}^{N-1} U(h_i, h_{\text{crit}}) v_i
+\end{equation}
+where $W_b$ is a weight vector.
+
+\item \textbf{Buffer Storage and Selection:} The buffer is updated every $f_{\text{req}}$ epochs, selecting the top-$k$ instances per slide.
+
+\item \textbf{Final Bag Embedding Calculation:} The buffer is introduced in the attention mechanism. Given a bag $H = \{h_1, ..., h_N\}$ and buffer $B = \{b_1, ..., b_M\}$, the attention matrix $A$ is computed:
+\begin{equation}
+A = Q_h Q_b^T
+\end{equation}
+where $Q_h$ and $Q_b$ contain row-wise concatenated projections of $H$ and $B$. An aggregation function $g(\cdot)$ is then applied to obtain a refined embedding:
+\begin{equation}
+G_i = g(\{A_{ij} : j \in [1, M]\})
+\end{equation}
+\begin{equation}
+b = W_b G^T V_h
+\end{equation}
+where $G$ is computed using mean or max aggregation.
+
+\end{enumerate}
 
 \section{Experiments and Results} \label{results}
 

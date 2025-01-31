@@ -101,6 +101,3 @@ class CustomBuffermil(Baseline):
 
     def bufferinference(self, feats):
         self.mil.bufferinference(feats)
-
-
-        
