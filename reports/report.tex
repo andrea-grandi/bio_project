@@ -11,6 +11,7 @@
 \usepackage{titlesec} % Per personalizzare i titoli
 \usepackage{abstract} % Per formattare l'abstract
 \usepackage{cite} 
+\usepackage{multirow}
 
 \usepackage{url}
 
@@ -46,7 +47,7 @@
 % Abstract
 \begin{abstract}
 \noindent 
-The visual examination of histopathological images is a cornerstone of cancer diagnosis, requiring pathologists to analyze tissue sections across multiple magnifications to identify tumor cells and subtypes. However, existing attention-based Multiple Instance Learning (MIL) models for Whole Slide Image (WSI) analysis often neglect contextual and numerical features, resulting in limited interpretability and potential misclassifications. Furthermore, the original MIL formulation incorrectly assumes the patches of the same image to be independent, leading to a loss of spatial context as information flows through the network. Incorporating contextual knowledge into predictions is particularly important given the inclination for cancerous cells to form clusters and the presence of spatial indicators for tumors. To address these limitations, we propose an enhanced MIL framework that integrates pre-contextual numerical information derived from semantic segmentation. Specifically, our approach combines visual features with nuclei-level numerical attributes, such as cell density and morphological diversity, extracted using advanced segmentation tools like Cellpose. These enriched features are then fed into a modified BufferMIL model for WSI classification. We evaluate our method on detecting lymph node metastases (CAMELYON16 and CAMELYON17).
+The visual examination of histopathological images is a cornerstone of cancer diagnosis, requiring pathologists to analyze tissue sections across multiple magnifications to identify tumor cells and subtypes. However, existing attention-based Multiple Instance Learning (MIL) models for Whole Slide Image (WSI) analysis often neglect contextual and numerical features, resulting in limited interpretability and potential misclassifications. Furthermore, the original MIL formulation incorrectly assumes the patches of the same image to be independent, leading to a loss of spatial context as information flows through the network. Incorporating contextual knowledge into predictions is particularly important given the inclination for cancerous cells to form clusters and the presence of spatial indicators for tumors. To address these limitations, we propose an enhanced MIL framework that integrates pre-contextual numerical information derived from semantic segmentation. Specifically, our approach combines visual features with nuclei-level numerical attributes, such as cell density and morphological diversity, extracted using advanced segmentation tools like Cellpose. These enriched features are then fed into a modified BufferMIL model for WSI classification. We evaluate our method on detecting lymph node metastases (CAMELYON16 and TCGA).
 
 \end{abstract}
 
@@ -243,12 +244,102 @@ G_i = g(\{A_{ij} : j \in [1, M]\})
 b = W_b G^T V_h
 \end{equation}
 where $G$ is computed using mean or max aggregation.
-
 \end{enumerate}
 
 \section{Experiments and Results} \label{results}
 
+\begin{table*}[h]
+\centering
+\caption{Performance comparison between our custom model and the original BufferMIL on CAMELYON16 and TCGA datasets. Metrics are reported as mean ± standard deviation.}
+\label{tab:performance_comparison}
+\begin{tabular}{lcc|cc}
+\hline
+\multirow{2}{*}{\textbf{Model}} & \multicolumn{2}{c|}{\textbf{CAMELYON16}} & \multicolumn{2}{c}{\textbf{TCGA}} \\ 
+ & \textbf{Accuracy} & \textbf{AUC} & \textbf{Accuracy} & \textbf{AUC} \\ 
+\hline
+Our & $0.85185 \pm 0.010$ & $0.91209 \pm 0.008$ & $0.80654 \pm 0.011$ & $0.83345 \pm 0.009$ \\ 
+BufferMIL & $\mathbf{0.89} \pm 0.012$ & $\mathbf{0.92857} \pm 0.006$ & $\mathbf{0.84989} \pm 0.013$ & $\mathbf{0.85643} \pm 0.007$ \\ 
+\hline
+\end{tabular}
+\end{table*}
+
+To demonstrate the performance of our method in capturing informative contextual knowledge, various experiments were performed on CAMELYON16 (Ehteshami Bejnordi et al., 2017)\cite{15b880f0e9424a5eb5cf74f6fc22f28a} and TCGA Lung. To measure our performance we used the following metrics:
+
+\begin{itemize}
+\item{Accuracy}
+\item{Precision}
+\item{Recall}
+\item{AUC: area under the curve}
+\end{itemize}
+
+We performed a great number of tests to find the best mix of inputs and hyperparameters, we tested:
+
+\begin{itemize}
+\item{Different types of pretrained Cellpose models like cyto, cyto2, cyto3 and nuclei}
+\item{Apply the mean or max buffer aggregation}
+\item{Using different number of critical patches}
+\end{itemize}
+
+The result in which we got the best performance out of our architecture was achieved using three inputs: CYTO3 for Cellpose model, MEAN buffer aggregation and select 10 critical patches to store in the buffer. 
+
+
+As shown in Table~\ref{tab:performance_comparison}, the original BufferMIL model consistently outperforms our custom model across both CAMELYON16 and TCGA datasets. 
+
+\begin{itemize}
+\item\textit{CAMELYON16:} BufferMIL achieves an accuracy of $0.89 \pm 0.012$ and an AUC of $0.92857 \pm 0.006$, while our custom model reaches $0.85185 \pm 0.010$ in accuracy and $0.91209 \pm 0.008$ in AUC.  
+\item\textit{TCGA:} BufferMIL obtains an accuracy of $0.84989 \pm 0.013$ and an AUC of $0.85643 \pm 0.007$, compared to $0.80654 \pm 0.011$ in accuracy and $0.83345 \pm 0.009$ in AUC for our custom model.
+\end{itemize}
+
+These results highlight the robustness of BufferMIL’s architecture, particularly in effectively capturing relevant features from the dataset. Despite this, our custom model remains competitive, with only a marginal decrease in performance. This suggests that further optimization, such as fine-tuning hyperparameters, exploring advanced aggregation techniques, or integrating additional contextual features, could narrow the gap in performance.
+
+Moreover, while BufferMIL shows superior performance, our custom model may offer advantages in terms of computational efficiency or adaptability to specific tasks, which can be further explored in future work.
+
+
+In our best results, we trained for 200 epochs using an ADAM optimizer. The learning rate was set to 0.001 and halved after 10 epochs. Another important detail is that in the original architecture the classifier was trained using BCEWithLogitsLoss (like in the original BufferMIL), this loss combines a Sigmoid layer and the BCELoss in one single class. This version is more numerically stable than using a plain Sigmoid followed by a BCELoss as, by combining the operations into one layer, we take advantage of the log-sum-exp trick for numerical stability.
+
+The unreduced (i.e., with reduction set to \texttt{none}) loss can be described as:
+
+\begin{align*}
+\ell(x, y) &= L = \{l_1, \dots, l_N\}^\top, \\
+l_n &= -w_n \left[ y_n \cdot \log \sigma(x_n) 
++ (1 - y_n) \cdot \log (1 - \sigma(x_n)) \right],
+\end{align*}
+
+where \( N \) is the batch size. If the reduction is not \texttt{none} (default is \texttt{mean}), then:
+
+\[
+\ell(x, y) = 
+\begin{cases}
+\text{mean}(L), & \text{if reduction = 'mean'}; \\
+\text{sum}(L), & \text{if reduction = 'sum'}.
+\end{cases}
+\]
+
+This is used for measuring the error of a reconstruction, for example in an autoencoder. Note that the targets \( t[i] \) should be numbers between 0 and 1.
+
+
+The model learned really well the distribution of the input training set, reaching a train accuracy as high as 0.95, the features learned from the training set are indeed well representative of our classification task, but this is not true when it comes to generalization, as our performance drops in the inference scenario. Moreover, we observe that, due to the scarcity of available data and the complexity of the disease, detecting cancer in hystopatological images seems to be a difficult case to study, as the performance results are consistently worse if methods are applied to this scenario.
+
+
 \section{Conclusions} \label{conclusions}
+
+%In this paper, we explored an alternative approach to perform the integration of numerical, more comprehensive data and WSI images in order to improve the performance on the prediction of tumoral WSIs affected by breast and lung cancer. The results we obtained are comparable with other state-of-the-art methods, but they are heavily affected by severe problems related to the scarcity of data and abundance and noisiness of the features. The advantage of our architecture with respect to the others available lies in our unique approach to integrating a-priori knowledge, inside a Multiple Instance Learning architecture. 
+
+%Moreover, the proposed model is easily configurable and adaptable to process different types of input data, also varying the number of modalities. 
+%Future developments of this architecture could focus on better feature selection methods for 
+
+%We could also extend our project by introducing a Graph Neural Network (GNN) component that would increase the wisdom coming from interconnections between patches like DAS-MIL (Bontempo et al., 2023)\cite{10.1007/978-3-031-43907-0_24}. 
+
+
+
+In this paper, we explored an alternative approach to perform the integration of numerical, more comprehensive data and WSI images in order to improve the performance on the prediction of tumoral WSIs affected by breast and lung cancer. The results we obtained are comparable with other state-of-the-art methods, but they are heavily affected by severe problems related to the scarcity of data and abundance and noisiness of the features. The advantage of our architecture with respect to the others available lies in our unique approach to integrating a-priori knowledge, inside a Multiple Instance Learning architecture.
+
+Moreover, the proposed model is easily configurable and adaptable to process different types of input data, also varying the number of modalities. Future developments of this architecture could focus on better feature selection methods for reducing redundancy and mitigating the impact of noisy data, which could significantly enhance model robustness and generalization capabilities. Additionally, exploring advanced data augmentation techniques could help address the issue of data scarcity, thereby improving the reliability of the model's predictions in real-world clinical scenarios.
+
+We could also extend our project by introducing a Graph Neural Network (GNN) component that would increase the wisdom coming from interconnections between patches like DAS-MIL (Bontempo et al., 2023)\cite{10.1007/978-3-031-43907-0_24}. This integration could enable the model to better capture spatial dependencies and contextual information inherent in WSIs, potentially leading to more accurate diagnostic insights. 
+
+Ultimately, our work lays the groundwork for future research in MIL data integration within the medical imaging field. By continuously refining the model architecture and leveraging emerging deep learning techniques, we aim to contribute to the development of more effective, interpretable, and clinically relevant diagnostic tools.
+
 
 \bibliographystyle{unsrt}
 \bibliography{references}

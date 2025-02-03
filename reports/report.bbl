@@ -38,6 +38,16 @@ Mathilde Caron, Hugo Touvron, Ishan Misra, et~al.
 \newblock Emerging properties in self-supervised vision transformers.
 \newblock {\em arXiv preprint arXiv:2104.14294}, 2021.
 
+\bibitem{10.1007/978-3-031-43153-1_1}
+Gianpaolo Bontempo, Luca Lumetti, Angelo Porrello, Federico Bolelli, Simone
+  Calderara, and Elisa Ficarra.
+\newblock Buffer-mil: Robust multi-instance learning with a buffer-based
+  approach.
+\newblock In {\em Image Analysis and Processing – ICIAP 2023: 22nd
+  International Conference, ICIAP 2023, Udine, Italy, September 11–15, 2023,
+  Proceedings, Part II}, page 1–12, Berlin, Heidelberg, 2023.
+  Springer-Verlag.
+
 \bibitem{conf/midl/SharmaSEMSB21}
 Yash Sharma, Aman Shrivastava, Lubaina Ehsan, Christopher~A. Moskaluk, Sana
   Syed, and Donald~E. Brown.
@@ -51,16 +61,6 @@ Yash Sharma, Aman Shrivastava, Lubaina Ehsan, Christopher~A. Moskaluk, Sana
 Bin Li, Yin Li, and Kevin~W. Eliceiri.
 \newblock Dual-stream multiple instance learning network for whole slide image
   classification with self-supervised contrastive learning, 2021.
-
-\bibitem{10.1007/978-3-031-43153-1_1}
-Gianpaolo Bontempo, Luca Lumetti, Angelo Porrello, Federico Bolelli, Simone
-  Calderara, and Elisa Ficarra.
-\newblock Buffer-mil: Robust multi-instance learning with a buffer-based
-  approach.
-\newblock In {\em Image Analysis and Processing – ICIAP 2023: 22nd
-  International Conference, ICIAP 2023, Udine, Italy, September 11–15, 2023,
-  Proceedings, Part II}, page 1–12, Berlin, Heidelberg, 2023.
-  Springer-Verlag.
 
 \bibitem{fourkioti2023camil}
 Olga Fourkioti, Matt~De Vries, Chen Jin, Daniel~C. Alexander, and Chris Bakal.
@@ -84,5 +84,33 @@ Alexey Dosovitskiy, Lucas Beyer, Alexander Kolesnikov, Dirk Weissenborn,
 Olaf Ronneberger, Philipp Fischer, and Thomas Brox.
 \newblock U-net: Convolutional networks for biomedical image segmentation,
   2015.
+
+\bibitem{15b880f0e9424a5eb5cf74f6fc22f28a}
+{Babak Ehteshami} Bejnordi, Mitko Veta, {Paul Johannes} {van Diest}, Bram {Van
+  Ginneken}, Nico Karssemeijer, Geert Litjens, {Jeroen A.W.M.} {van der Laak},
+  Meyke Hermsen, {Quirine F.} Manson, Maschenka Balkenhol, Oscar Geessink,
+  Nikolaos Stathonikos, {Marcory C.R.F.} {Van Dijk}, Peter Bult, Francisco
+  Beca, {Andrew H.} Beck, Dayong Wang, Aditya Khosla, Rishab Gargeya, Humayun
+  Irshad, Aoxiao Zhong, Qi~Dou, Quanzheng Li, Hao Chen, {Huang Jing} Lin,
+  {Pheng Ann} Heng, Christian Ha{\ss}, Elia Bruni, Quincy Wong, Ugur Halici,
+  {Mustafa {\"U}mit} {\"O}ner, Rengul Cetin-Atalay, Matt Berseth, Vitali
+  Khvatkov, Alexei Vylegzhanin, Oren Kraus, Muhammad Shaban, Nasir Rajpoot,
+  Ruqayya Awan, Korsuk Sirinukunwattana, Talha Qaiser, {Yee Wah} Tsang, David
+  Tellez, Jonas Annuscheit, Peter Hufnagl, Mira Valkonen, Kimmo Kartasalo,
+  Leena Latonen, Pekka Ruusuvuori, Kaisa Liimatainen, and {CAMELYON16
+  Consortium}.
+\newblock Diagnostic assessment of deep learning algorithms for detection of
+  lymph node metastases in women with breast cancer.
+\newblock {\em JAMA Neurology}, 318(22):2199--2210, December 2017.
+
+\bibitem{10.1007/978-3-031-43907-0_24}
+Gianpaolo Bontempo, Angelo Porrello, Federico Bolelli, Simone Calderara, and
+  Elisa Ficarra.
+\newblock Das-mil: Distilling across scales for mil classification of
+  histological wsis.
+\newblock In {\em Medical Image Computing and Computer Assisted Intervention
+  – MICCAI 2023: 26th International Conference, Vancouver, BC, Canada,
+  October 8–12, 2023, Proceedings, Part I}, page 248–258, Berlin,
+  Heidelberg, 2023. Springer-Verlag.
 
 \end{thebibliography}
