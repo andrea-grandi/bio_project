@@ -5,15 +5,17 @@ import submitit
 import pandas as pd
 import argparse
 
+
 def get_args():
     # Parse command line arguments
     parser = argparse.ArgumentParser(description='sort_slide')
     parser.add_argument('--sourcex20', default="SOURCEPATH20", type=str, help='path to patches at 20x scale')
-    parser.add_argument('--slurm_partition', default="SLURM_PARTIITION", type=str, help='slurm partition')
+    parser.add_argument('--slurm_partition', default="SLURM_PARTITION", type=str, help='slurm partition')
     parser.add_argument('--step', default=10, type=int, help='how many slides process within each job')
     parser.add_argument('--dest', default="DESTINATIONPATH", type=str, help='destination folder')
     args = parser.parse_args()
     return args
+
 
 def nested_patches(candidate, args):
     """
@@ -31,7 +33,7 @@ def nested_patches(candidate, args):
     label = ""
 
     levelx20path = os.path.join(args.sourcex20, real_name, "0", "*.jpg")
-    dest_folder = os.path.join(dest, test + id + "_" + str(label))
+    dest_folder = os.path.join(dest, test + id)# + "_" + str(label))
 
     # Create destination folder if it doesn't exist
     os.makedirs(dest_folder, exist_ok=True)
@@ -47,6 +49,7 @@ def nested_patches(candidate, args):
         if not os.path.isfile(dest_patch_path):
             shutil.copy(patch_x20_path, dest_patch_path)
             print(f"Copied {patch_name} to {dest_folder}", flush=True)
+
 
 def prepareslide(candidates, args):
     """
@@ -83,4 +86,5 @@ if __name__ == "__main__":
         if len(glob.glob(os.path.join(dest_folder, "*.jpg"))) != len(glob.glob(levelx20path)):
             real_candidates.append(candidate)
 
+    # Process the real candidates
     prepareslide(real_candidates, args)

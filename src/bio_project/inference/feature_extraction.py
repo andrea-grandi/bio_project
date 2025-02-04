@@ -1,26 +1,27 @@
 import os
 import subprocess
 
-def feature_extraction(image_dir: str="/Users/andreagrandi/Developer/bio_project/src/bio_project/inference/input_patches", 
-                       numerical_features_path: str="/Users/andreagrandi/Developer/bio_project/src/bio_project/inference/metadata/cellpose_metadata.csv", 
-                       output_pt_path: str="/Users/andreagrandi/Developer/bio_project/src/bio_project/inference/features/concatenated_features.pt"):
+def feature_extraction(extractedpatchespath, savepath, pretrained_weights1, pretrained_weights2, pretrained_weights3, propertiescsv):
   """
-  Feature extraction using DINO
+  Feature extraction using DINO and Cellpose.
   """
-  os.makedirs(output_pt_path, exist_ok=True)
+  os.makedirs(savepath, exist_ok=True)
 
-  script_path = "/Users/andreagrandi/Developer/bio_project/src/bio_project/feature_extraction/feature_extractor_dino.py"
+  script_path = "/Users/andreagrandi/Developer/bio_project/src/bio_project/feature_extraction/run_with_submitit.py"
   
   command = [
-      "python", script_path,
-      "--image_dir", image_dir,
-      "--numerical_features_path", numerical_features_path,
-      "--output_pt_path", output_pt_path
+        "python", script_path,
+        "--extractedpatchespath", extractedpatchespath,
+        "--savepath", savepath,
+        "--pretrained_weights1", pretrained_weights1,
+        "--pretrained_weights2", pretrained_weights2,
+        "--pretrained_weights3", pretrained_weights3,
+        "--propertiescsv", propertiescsv
   ]
 
   try:
       subprocess.run(command, check=True)
-      print(f"Feature extraction completed. Results saved to: {output_pt_path}")
+      print(f"Feature extraction completed. Results saved to: {savepath}")
   except subprocess.CalledProcessError as e:
       print(f"Error during feature extraction: {e}")
   except Exception as e:

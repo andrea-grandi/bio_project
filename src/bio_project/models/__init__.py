@@ -10,7 +10,7 @@ from models.buffermil.buffermil import Buffermil
 #from models.hipt.hipt import HIPT_LGP_FC
 
 # Dictionary of multi-scale models
-
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 multi_scales_models = {
     #"DASMIL":  {"model": DASMIL, "kl": "lower", "target": "higher"},
@@ -64,7 +64,7 @@ def selectModel(args):
     num_params = sum(p.numel() for p in model.parameters())
     print(f"Number of parameters: {num_params}")
     # Move the model to GPU
-    model = model.cuda()
+    model = model.to(device)
     # Calculate and print memory usage in GB
     memory_usage = torch.cuda.memory_allocated(
         device="cuda") / 1e9  # in gigabytes

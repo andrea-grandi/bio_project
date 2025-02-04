@@ -1,16 +1,13 @@
 import os
 import subprocess
 
-def convert_h5_to_jpg(output_dir: str="/Users/andreagrandi/Developer/bio_project/src/bio_project/inference/input_patches", 
-                      source_dir: str="/Users/andreagrandi/Developer/bio_project/src/bio_project/inference/output_clam/patches", 
-                      slide_ext: str=".svs"):
+def convert_h5_to_jpg(output_dir, source_dir, slide_ext, csv_file):
   """  
   Convert h5 files to jpg
   """
   os.makedirs(output_dir, exist_ok=True)
 
   script_path = "/Users/andreagrandi/Developer/bio_project/src/bio_project/preprocessing/convert_h5_to_jpg.py"
-  csv_file = "/Users/andreagrandi/Developer/bio_project/src/bio_project/inference/output_clam/process_list_autogen.csv"
   
   command = [
       "python", script_path,

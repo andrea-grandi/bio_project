@@ -90,7 +90,6 @@ def save_patches(file_path, output_path, wsi, target_patch_size, max_patches=100
         image = transform(batch.view(3, 256, 256))
         image.save(imagepath, quality=70)
 
-
 if __name__ == '__main__':
     # Parse command line arguments
     parser = argparse.ArgumentParser(description='Feature Extraction')
