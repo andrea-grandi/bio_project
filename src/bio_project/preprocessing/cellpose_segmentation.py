@@ -66,12 +66,10 @@ def process_patches(input_dir, output_csv, channels=None, diameter=None, model_t
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--input_dir", 
-                        type=str, 
-                        #default="/Users/andreagrandi/Developer/bio_project/src/bio_project/dataset/camelyon17/512x512_patches"
+                        type=str
     )
     parser.add_argument("--output_csv", 
-                        type=str, 
-                        #default="/Users/andreagrandi/Developer/bio_project/src/bio_project/dataset/camelyon17/cellpose_metadata.csv"
+                        type=str
     )
 
     args = parser.parse_args()
