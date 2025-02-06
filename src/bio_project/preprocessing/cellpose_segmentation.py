@@ -5,6 +5,37 @@ from tqdm import tqdm
 import argparse
 import cv2
 from cellpose import models, io
+import matplotlib.pyplot as plt
+
+
+def visualize_segmentation(img, masks):
+    centroids = []
+    for i in range(1, np.max(masks) + 1):
+        mask = (masks == i).astype(np.uint8)
+        moments = cv2.moments(mask)
+        if moments["m00"] != 0:
+            cx = int(moments["m10"] / moments["m00"])
+            cy = int(moments["m01"] / moments["m00"])
+            centroids.append((cx, cy))
+
+    contours, _ = cv2.findContours(masks.astype(np.uint8), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    
+    # Converti l'immagine in RGB per la visualizzazione
+    img_rgb = cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)
+    
+    # Disegna i contorni delle cellule
+    #cv2.drawContours(img_rgb, contours, -1, (0, 255, 0), 1)
+    
+    # Disegna i centroidi
+    for cx, cy in centroids:
+        cv2.circle(img_rgb, (cx, cy), 3, (0, 0, 255), -1)
+    
+    # Mostra il risultato
+    plt.figure(figsize=(8, 8))
+    plt.imshow(img_rgb)
+    plt.axis("off")
+    plt.title("Segmentazione con Cellpose")
+    plt.show()
 
 
 # Function to process patches and extract metadata
@@ -46,6 +77,9 @@ def process_patches(input_dir, output_csv, channels=None, diameter=None, model_t
                 # Placeholder for cell type detection (needs custom classifier)
                 # For now, assume all are generic "cell"
                 cell_types = {"generic_cell": num_cells}
+                print("TEST")
+
+                visualize_segmentation(img, masks)
 
                 # Store the metadata
                 metadata.append({
@@ -57,16 +91,17 @@ def process_patches(input_dir, output_csv, channels=None, diameter=None, model_t
                 })
 
     # Save metadata to CSV
-    metadata_df = pd.DataFrame(metadata)
-    metadata_df.to_csv(output_csv, index=False)
+    #metadata_df = pd.DataFrame(metadata)
+    #metadata_df.to_csv(output_csv, index=False)
 
-    print(f"Metadata saved to {output_csv}")
+    #print(f"Metadata saved to {output_csv}")
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--input_dir", 
-                        type=str
+                        type=str,
+                        default="/Users/andreagrandi/Developer/bio_project/src/bio_project/inference/output_clam/images/tumor_048_tumor/0/"
     )
     parser.add_argument("--output_csv", 
                         type=str

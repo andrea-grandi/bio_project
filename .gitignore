@@ -104,11 +104,11 @@ target/
 *.tif
 *.tiff
 
-*.h5
+#*.h5
 
 # images
-*.png
-*.jpg
+#*.png
+#*.jpg
 
 # models
 *.pt
