@@ -282,7 +282,7 @@ def compute_tree_feats_Slide(real_name, label, test, args, models, save_path=Non
 
     cellpose_model = cellpose_models.Cellpose(gpu=False, model_type='cyto3')
 
-    allowedlevels = args.levels  # Livelli consentiti (solo livello 0)
+    allowedlevels = args.levels 
     level = 0  
     shift = int(base_shift / 2**level)
 
@@ -303,10 +303,8 @@ def compute_tree_feats_Slide(real_name, label, test, args, models, save_path=Non
                 )
                 infos.append(kinfo)
             else:
-                # Se non stai processando altri livelli, puoi saltare questa parte
                 pass
 
-        # Cerca i vicini solo per il livello 0
         infos = search_neighboors(infos)
         matrix = create_matrix(infos)
         os.makedirs(dest, exist_ok=True)

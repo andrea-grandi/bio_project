@@ -19,40 +19,27 @@ def visualize_segmentation(img, masks):
             centroids.append((cx, cy))
 
     contours, _ = cv2.findContours(masks.astype(np.uint8), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    
-    # Converti l'immagine in RGB per la visualizzazione
     img_rgb = cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)
-    
-    # Disegna i contorni delle cellule
-    #cv2.drawContours(img_rgb, contours, -1, (0, 255, 0), 1)
-    
-    # Disegna i centroidi
+    cv2.drawContours(img_rgb, contours, -1, (0, 255, 0), 1)
+
     for cx, cy in centroids:
         cv2.circle(img_rgb, (cx, cy), 3, (0, 0, 255), -1)
     
-    # Mostra il risultato
     plt.figure(figsize=(8, 8))
     plt.imshow(img_rgb)
     plt.axis("off")
     plt.title("Segmentazione con Cellpose")
     plt.show()
 
-
-# Function to process patches and extract metadata
 def process_patches(input_dir, output_csv, channels=None, diameter=None, model_type="cyto3"):
-    # Load Cellpose model
     model = models.Cellpose(gpu=False, model_type=model_type)
-
-    # Prepare a list for metadata
     metadata = []
-
     # Recursively find all .jpg files in the input directory
     for root, _, files in os.walk(input_dir):
         for file in files:
             if file.lower().endswith(('.png', '.jpg', '.jpeg', '.tiff', '.tif')):
                 patch_path = os.path.join(root, file)
 
-                # Load the image
                 img = cv2.imread(patch_path, cv2.IMREAD_GRAYSCALE)
                 print(f"Processing {file}...")
 
@@ -77,7 +64,6 @@ def process_patches(input_dir, output_csv, channels=None, diameter=None, model_t
                 # Placeholder for cell type detection (needs custom classifier)
                 # For now, assume all are generic "cell"
                 cell_types = {"generic_cell": num_cells}
-                print("TEST")
 
                 visualize_segmentation(img, masks)
 
@@ -90,7 +76,6 @@ def process_patches(input_dir, output_csv, channels=None, diameter=None, model_t
                     "cell_types": cell_types
                 })
 
-    # Save metadata to CSV
     #metadata_df = pd.DataFrame(metadata)
     #metadata_df.to_csv(output_csv, index=False)
 
