@@ -68,11 +68,11 @@ def test(model, testloader):
     test_predictions1 = np.array(test_predictions1)
 
     # Compute metrics for higher-level predictions
-    avg_score_higher, auc_value_higher, class_prediction_bag_higher = computeMetrics(test_labels, test_predictions0, model.classes, names)
+    avg_score_higher, auc_value_higher, class_prediction_bag_higher, precision, recall = computeMetrics(test_labels, test_predictions0, model.classes, names)
 
     # Compute metrics for lower-level predictions if available
     if test_predictions1.shape[0] != 0:
-        avg_score_lower, auc_value_lower, class_prediction_bag_lower = computeMetrics(test_labels, test_predictions1, model.classes, names)
+        avg_score_lower, auc_value_lower, class_prediction_bag_lower, precision, recall = computeMetrics(test_labels, test_predictions1, model.classes, names)
     else:
         avg_score_lower = 0
         auc_value_lower = 0
@@ -82,4 +82,4 @@ def test(model, testloader):
     model.train()
 
     # Return the computed metrics and predictions
-    return avg_score_higher, avg_score_lower, auc_value_higher, auc_value_lower, class_prediction_bag_higher, class_prediction_bag_lower, test_labels
+    return avg_score_higher, avg_score_lower, auc_value_higher, auc_value_lower, class_prediction_bag_higher, class_prediction_bag_lower, test_labels, precision, recall

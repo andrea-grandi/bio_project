@@ -1,6 +1,6 @@
 import numpy as np
 import copy
-from sklearn.metrics import roc_curve, roc_auc_score
+from sklearn.metrics import roc_curve, roc_auc_score, precision_score, recall_score, f1_score, accuracy_score
 
 
 def multi_label_roc(labels, predictions, num_classes, pos_label=1):
@@ -99,4 +99,9 @@ def computeMetrics(test_labels, test_predictions, num_classes=2, names=[]):
         bag_score = np.array_equal(
             test_labels[i], test_predictions[i]) + bag_score
     avg_score = bag_score / len(test_predictions)
-    return avg_score, auc_value[0], class_prediction_bag
+
+    # Compute Precision and Recall
+    precision = precision_score(test_labels, test_predictions, average='macro')
+    recall = recall_score(test_labels, test_predictions, average='macro')
+    
+    return avg_score, auc_value[0], class_prediction_bag, precision, recall
