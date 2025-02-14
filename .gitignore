@@ -122,5 +122,7 @@ target/
 
 detectron2/
 
+/Users/andreagrandi/Developer/bio_project/src/bio_project/preprocessing/cellpose_custom
+
 #Dataset
 #/Users/andreagrandi/Developer/bio_project/src/bio_project/dataset/camelyon17
