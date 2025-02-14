@@ -6,6 +6,7 @@ import torch
 #from models.meanpooling.meanpooling import MeanPooling
 #from models.transmil.transmil import TransMIL
 from models.buffermil.custom_buffermil import CustomBuffermil
+from models.buffermil.custom_buffermil_v2 import CustomBuffermilV2
 from models.buffermil.buffermil import Buffermil
 #from models.hipt.hipt import HIPT_LGP_FC
 
@@ -27,6 +28,7 @@ single_scales_models = {
    # "TransMIL":  {"model": TransMIL, "kl": None, "target": "higher"},
     "Buffermil":  {"model": Buffermil, "kl": None, "target": "higher"},
     "CustomBuffermil":  {"model": CustomBuffermil, "kl": None, "target": "higher"},
+    "CustomBuffermilV2":  {"model": CustomBuffermilV2, "kl": None, "target": "higher"},
 }
 
 
