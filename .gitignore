@@ -124,7 +124,4 @@ detectron2/
 
 *.npy
 *.mov
-*.pptx
 
-#Dataset
-#/Users/andreagrandi/Developer/bio_project/src/bio_project/dataset/camelyon17
