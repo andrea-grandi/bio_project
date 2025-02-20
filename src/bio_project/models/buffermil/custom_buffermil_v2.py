@@ -36,9 +36,9 @@ class CustomBuffermilV2(Baseline):
                 return_feats: bool = False):
 
         if cellpose_feats is not None:
-            # Calcola i gate (coefficiente tra 0 e 1 per ogni feature) e modula x
+            # Computes the gates (coefficients between 0 and 1 for each feature) and scales x accordingly
             gate = self.gate_layer(cellpose_feats)  # shape: (N, c_in)
-            x = x * gate  # gating: ogni feature viene scalata dal corrispondente coefficiente
+            x = x * gate  # gating: each feature is scaled by its corresponding coefficient
         
         results = {}
         if self.inference:
