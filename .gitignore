@@ -125,3 +125,5 @@ detectron2/
 *.npy
 *.mov
 
+
+*.gz
