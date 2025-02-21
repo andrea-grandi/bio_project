@@ -19,28 +19,36 @@
 \citation{li2021dualstreammultipleinstancelearning}
 \citation{fourkioti2023camil}
 \citation{WANG2024109826}
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Whole Slide Image Preprocessing}}{2}{figure.1}\protected@file@percent }
-\newlabel{wsi_preprocessing}{{1}{2}{Whole Slide Image Preprocessing}{figure.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Whole Slide Image Preprocessing}}{2}{figure.caption.1}\protected@file@percent }
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{wsi_preprocessing}{{1}{2}{Whole Slide Image Preprocessing}{figure.caption.1}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {3}Methods}{2}{section.3}\protected@file@percent }
 \newlabel{methods}{{3}{2}{Methods}{section.3}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Patch Extraction and Preprocessing}{2}{subsection.3.1}\protected@file@percent }
 \citation{dosovitskiy2021imageworth16x16words}
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces \textbf  {Cellpose model architecture. a}, Procedure for transforming manually annotated masks into a vector flow representation that can be predicted by a neural network. A simulated diffusion process started at the center of the mask is used to derive spatial gradients that point towards the center of the cell, potentially indirectly around corners. The X and Y gradients are combined into a single normalized direction from 0 to 360. \textbf  {b}, Example spatial flows for cells from the training dataset. \textbf  {cd}, A neural network is trained to predict the horizontal and vertical flows, as well as whether a pixel belongs to any cell. The three predicted maps are combined into a flow field. \textbf  {d} shows the details of the neural network which contains a standard backbone neural network that downsamples and then upsamples the feature maps, contains skip connections between layers of the same size, and global skip connections from the image styles, computed at the lowest resolution, to all the successive computations. \textbf  {e}, At test time, the predicted flow fields are used to construct a dynamical system with fixed points whose basins of attraction represent the predicted masks. Informally, every pixel ”follows the flows” along the predicted flow fields towards their eventual fixed point. \textbf  {f}, All the pixels that converge to the same fixed point are assigned to the same mask.}}{3}{figure.2}\protected@file@percent }
-\newlabel{cellpose}{{2}{3}{\textbf {Cellpose model architecture. a}, Procedure for transforming manually annotated masks into a vector flow representation that can be predicted by a neural network. A simulated diffusion process started at the center of the mask is used to derive spatial gradients that point towards the center of the cell, potentially indirectly around corners. The X and Y gradients are combined into a single normalized direction from 0 to 360. \textbf {b}, Example spatial flows for cells from the training dataset. \textbf {cd}, A neural network is trained to predict the horizontal and vertical flows, as well as whether a pixel belongs to any cell. The three predicted maps are combined into a flow field. \textbf {d} shows the details of the neural network which contains a standard backbone neural network that downsamples and then upsamples the feature maps, contains skip connections between layers of the same size, and global skip connections from the image styles, computed at the lowest resolution, to all the successive computations. \textbf {e}, At test time, the predicted flow fields are used to construct a dynamical system with fixed points whose basins of attraction represent the predicted masks. Informally, every pixel ”follows the flows” along the predicted flow fields towards their eventual fixed point. \textbf {f}, All the pixels that converge to the same fixed point are assigned to the same mask}{figure.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces \textbf  {Cellpose model architecture. a}, Procedure for transforming manually annotated masks into a vector flow representation that can be predicted by a neural network. A simulated diffusion process started at the center of the mask is used to derive spatial gradients that point towards the center of the cell, potentially indirectly around corners. The X and Y gradients are combined into a single normalized direction from 0 to 360. \textbf  {b}, Example spatial flows for cells from the training dataset. \textbf  {cd}, A neural network is trained to predict the horizontal and vertical flows, as well as whether a pixel belongs to any cell. The three predicted maps are combined into a flow field. \textbf  {d} shows the details of the neural network which contains a standard backbone neural network that downsamples and then upsamples the feature maps, contains skip connections between layers of the same size, and global skip connections from the image styles, computed at the lowest resolution, to all the successive computations. \textbf  {e}, At test time, the predicted flow fields are used to construct a dynamical system with fixed points whose basins of attraction represent the predicted masks. Informally, every pixel ”follows the flows” along the predicted flow fields towards their eventual fixed point. \textbf  {f}, All the pixels that converge to the same fixed point are assigned to the same mask.}}{3}{figure.caption.2}\protected@file@percent }
+\newlabel{cellpose}{{2}{3}{\textbf {Cellpose model architecture. a}, Procedure for transforming manually annotated masks into a vector flow representation that can be predicted by a neural network. A simulated diffusion process started at the center of the mask is used to derive spatial gradients that point towards the center of the cell, potentially indirectly around corners. The X and Y gradients are combined into a single normalized direction from 0 to 360. \textbf {b}, Example spatial flows for cells from the training dataset. \textbf {cd}, A neural network is trained to predict the horizontal and vertical flows, as well as whether a pixel belongs to any cell. The three predicted maps are combined into a flow field. \textbf {d} shows the details of the neural network which contains a standard backbone neural network that downsamples and then upsamples the feature maps, contains skip connections between layers of the same size, and global skip connections from the image styles, computed at the lowest resolution, to all the successive computations. \textbf {e}, At test time, the predicted flow fields are used to construct a dynamical system with fixed points whose basins of attraction represent the predicted masks. Informally, every pixel ”follows the flows” along the predicted flow fields towards their eventual fixed point. \textbf {f}, All the pixels that converge to the same fixed point are assigned to the same mask}{figure.caption.2}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Feature Extraction}{3}{subsection.3.2}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {3.2.1}Visual Feature Extraction with DINO}{3}{subsubsection.3.2.1}\protected@file@percent }
 \citation{ronneberger2015unetconvolutionalnetworksbiomedical}
+\citation{stringer2021cellpose}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {3.2.2}Numerical Feature Extraction with Cellpose}{4}{subsubsection.3.2.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Cellpose models comparison}}{4}{figure.caption.3}\protected@file@percent }
+\newlabel{cellpose_models_comparison}{{3}{4}{Cellpose models comparison}{figure.caption.3}{}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {3.2.3}Geometry Dataset Conversion}{4}{subsubsection.3.2.3}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces BufferMIL architecture}}{4}{figure.3}\protected@file@percent }
-\newlabel{buffermil_arc}{{3}{4}{BufferMIL architecture}{figure.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces BufferMIL architecture}}{4}{figure.caption.4}\protected@file@percent }
+\newlabel{buffermil_arc}{{4}{4}{BufferMIL architecture}{figure.caption.4}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Buffer Adaptation}{4}{subsection.3.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}Implementation}{4}{subsection.3.4}\protected@file@percent }
+\newlabel{fig:arch_v1}{{5a}{5}{Cellpose feature injection}{figure.caption.5}{}}
+\newlabel{sub@fig:arch_v1}{{a}{5}{Cellpose feature injection}{figure.caption.5}{}}
+\newlabel{fig:arch_v2}{{5b}{5}{Cellpose feature gating}{figure.caption.5}{}}
+\newlabel{sub@fig:arch_v2}{{b}{5}{Cellpose feature gating}{figure.caption.5}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Our architectures}}{5}{figure.caption.5}\protected@file@percent }
+\newlabel{custom_buffermil_arc}{{5}{5}{Our architectures}{figure.caption.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}Implementation}{5}{subsection.3.4}\protected@file@percent }
 \citation{15b880f0e9424a5eb5cf74f6fc22f28a}
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Our architecture}}{5}{figure.4}\protected@file@percent }
-\newlabel{custom_buffermil_arc}{{4}{5}{Our architecture}{figure.4}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {4}Experiments and Results}{5}{section.4}\protected@file@percent }
-\newlabel{results}{{4}{5}{Experiments and Results}{section.4}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Experiments and Results}{6}{section.4}\protected@file@percent }
+\newlabel{results}{{4}{6}{Experiments and Results}{section.4}{}}
 \citation{10.1007/978-3-031-43907-0_24}
 \bibstyle{unsrt}
 \bibdata{references}
@@ -52,16 +60,23 @@
 \bibcite{stringer2021cellpose}{6}
 \bibcite{caron2021emerging}{7}
 \bibcite{10.1007/978-3-031-43153-1_1}{8}
-\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Performance comparison between our custom model and the original BufferMIL on CAMELYON16 and TCGA datasets. Metrics are reported as mean ± standard deviation.}}{6}{table.1}\protected@file@percent }
-\newlabel{tab:performance_comparison}{{1}{6}{Performance comparison between our custom model and the original BufferMIL on CAMELYON16 and TCGA datasets. Metrics are reported as mean ± standard deviation}{table.1}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {5}Conclusions}{6}{section.5}\protected@file@percent }
-\newlabel{conclusions}{{5}{6}{Conclusions}{section.5}{}}
 \bibcite{conf/midl/SharmaSEMSB21}{9}
 \bibcite{li2021dualstreammultipleinstancelearning}{10}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Performance comparison between our custom model and the original BufferMIL on CAMELYON16 and TCGA LUAD (lung) datasets. Metrics are reported as mean ± standard deviation.}}{7}{table.caption.6}\protected@file@percent }
+\newlabel{tab:performance_comparison}{{1}{7}{Performance comparison between our custom model and the original BufferMIL on CAMELYON16 and TCGA LUAD (lung) datasets. Metrics are reported as mean ± standard deviation}{table.caption.6}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Conclusions}{7}{section.5}\protected@file@percent }
+\newlabel{conclusions}{{5}{7}{Conclusions}{section.5}{}}
 \bibcite{fourkioti2023camil}{11}
 \bibcite{WANG2024109826}{12}
 \bibcite{dosovitskiy2021imageworth16x16words}{13}
 \bibcite{ronneberger2015unetconvolutionalnetworksbiomedical}{14}
 \bibcite{15b880f0e9424a5eb5cf74f6fc22f28a}{15}
 \bibcite{10.1007/978-3-031-43907-0_24}{16}
-\gdef \@abspage@last{7}
+\@writefile{toc}{\contentsline {section}{\numberline {A}Additional Plots}{9}{appendix.A}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces How our custom model (feature injection) works with different buffer aggregation techniques and different number of selected patches.}}{9}{figure.caption.7}\protected@file@percent }
+\newlabel{fig:comparison_mean_ntop}{{6}{9}{How our custom model (feature injection) works with different buffer aggregation techniques and different number of selected patches}{figure.caption.7}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces How our custom model (feature injection) works with different number of selected patches and the buffer update frequency.}}{9}{figure.caption.8}\protected@file@percent }
+\newlabel{fig:comaprison_ntop_buffreq}{{7}{9}{How our custom model (feature injection) works with different number of selected patches and the buffer update frequency}{figure.caption.8}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Original BufferMIL vs Feature injection vs Feature gating.}}{10}{figure.caption.9}\protected@file@percent }
+\newlabel{fig:comaprison_ntop_buffreq}{{8}{10}{Original BufferMIL vs Feature injection vs Feature gating}{figure.caption.9}{}}
+\gdef \@abspage@last{10}

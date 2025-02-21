@@ -12,6 +12,7 @@
 \usepackage{abstract} % Per formattare l'abstract
 \usepackage{cite} 
 \usepackage{multirow}
+\usepackage{subcaption}
 
 \usepackage{url}
 
@@ -47,7 +48,7 @@
 % Abstract
 \begin{abstract}
 \noindent 
-The visual examination of histopathological images is a cornerstone of cancer diagnosis, requiring pathologists to analyze tissue sections across multiple magnifications to identify tumor cells and subtypes. However, existing attention-based Multiple Instance Learning (MIL) models for Whole Slide Image (WSI) analysis often neglect contextual and numerical features, resulting in limited interpretability and potential misclassifications. Furthermore, the original MIL formulation incorrectly assumes the patches of the same image to be independent, leading to a loss of spatial context as information flows through the network. Incorporating contextual knowledge into predictions is particularly important given the inclination for cancerous cells to form clusters and the presence of spatial indicators for tumors. To address these limitations, we propose an enhanced MIL framework that integrates pre-contextual numerical information derived from semantic segmentation. Specifically, our approach combines visual features with nuclei-level numerical attributes, such as cell density and morphological diversity, extracted using advanced segmentation tools like Cellpose. These enriched features are then fed into a modified BufferMIL model for WSI classification. We evaluate our method on detecting lymph node metastases (CAMELYON16 and TCGA).
+The visual examination of histopathological images is a cornerstone of cancer diagnosis, requiring pathologists to analyze tissue sections across multiple magnifications to identify tumor cells and subtypes. However, existing attention-based Multiple Instance Learning (MIL) models for Whole Slide Image (WSI) analysis often neglect contextual and numerical features, resulting in limited interpretability and potential misclassifications. Furthermore, the original MIL formulation incorrectly assumes the patches of the same image to be independent, leading to a loss of spatial context as information flows through the network. Incorporating contextual knowledge into predictions is particularly important given the inclination for cancerous cells to form clusters and the presence of spatial indicators for tumors. To address these limitations, we propose an enhanced MIL framework that integrates pre-contextual numerical information derived from semantic segmentation. Specifically, our approach combines visual features with nuclei-level numerical attributes, such as cell density and morphological diversity, extracted using advanced segmentation tools like Cellpose. These enriched features are then fed into a modified BufferMIL model for WSI classification. We evaluate our method on detecting lymph node metastases (CAMELYON16 and TCGA lung).
 
 \end{abstract}
 
@@ -148,6 +149,14 @@ To incorporate numerical features, we employed Cellpose to extract nuclei-level 
 
 As we can see in Figure \ref{cellpose}, the segmentation process involves several steps. First, the image patches are preprocessed to enhance contrast and remove noise. Cellpose then applies a U-Net architecture (Ronneberger et al., 2015)\cite{ronneberger2015unetconvolutionalnetworksbiomedical} to predict cell boundaries and nuclei centers. Additionally, Cellpose predicts flow vectors, which are crucial for accurately segmenting overlapping or touching cells. These flow vectors represent the direction and magnitude from cell centers to the edges, aiding in the precise identification of individual cells.
 
+In this work, we utilize the pretrained cyto3 model, as it is the most general and achieves the best performance on our dataset as we can see in Figure \ref{cellpose_models_comparison}. Additionally, we explore Cellpose 2.0 (Stringer et al., 2021) \cite{stringer2021cellpose} to train a custom model; however, it does not provide a significant improvement over the original model.
+\begin{figure}[!htb]
+\centering
+\includegraphics[width=\linewidth, height=8cm]{images/comparison_between_cellpose_models.png}
+\caption{Cellpose models comparison} 
+\label{cellpose_models_comparison}
+\end{figure}
+
 From these predictions, we extracted numerical features including cell density (number of cells per unit area), average nucleus area, and morphological diversity (measured using shape descriptors such as circularity and eccentricity). To further enhance the feature set, we derived features from the flow vectors, such as the mean and variance of flow directions and magnitudes within each patch. These flow-based features provide additional context about the cellular arrangement and organization.
 
 We concatenated these numerical features with the visual embeddings from DINO to create a comprehensive representation of each patch, enhancing the discriminative power of our model. To ensure effective integration, we normalized the features, allowing them to contribute equally to the model's performance.
@@ -179,7 +188,22 @@ The DataBatch structure organizes the data into batches, where each batch contai
 %\end{align}
 %%%
 %where $W_{p}$ is the weight vector.
-
+\begin{figure*}[!htb]
+\centering
+\begin{subfigure}[b]{0.48\linewidth}
+    \includegraphics[width=\linewidth, height=6cm]{images/custom_arch_v1.png}
+    \caption{Cellpose feature injection}
+    \label{fig:arch_v1}
+\end{subfigure}
+\hfill
+\begin{subfigure}[b]{0.48\linewidth}
+    \includegraphics[width=\linewidth, height=6cm]{images/custom_arch_v2.png}
+    \caption{Cellpose feature gating}
+    \label{fig:arch_v2}
+\end{subfigure}
+\caption{Our architectures}
+\label{custom_buffermil_arc}
+\end{figure*}
 
 To adapt BufferMIL, particularly the buffer selection of critical patches, we have implemented an embedding concatenation approach before incorporating them into the attention matrix. 
 
@@ -199,6 +223,45 @@ A' = w_1 A + w_2 \tilde{C} + w_3 \tilde{A}_{c},
 \end{equation}
 
 where $w_1, w_2, w_3$ are tunable hyperparameters that balance the contribution of the original attention matrix and the new morphological features.
+
+
+Instead, the second approach follows a gate mechanism to integrate additional input features into the model. Specifically, we incorporate three features derived from the segmentation process (\texttt{num\_cells}, \texttt{cell\_density}, \texttt{mean\_cell\_area}), which are stacked together using \texttt{torch.stack}. These features provide valuable information regarding the segmentation, such as the number of cells, their density, and their average area.
+
+The gating mechanism is implemented through a dedicated layer:
+
+\begin{verbatim}
+self.gate_layer = nn.Sequential(
+    nn.Linear(3, self.c_in),
+    nn.Sigmoid()
+)
+\end{verbatim}
+
+Mathematically, the gate function can be expressed as:
+
+\[
+G(f) = \sigma(W_g f + b_g)
+\]
+
+where \( G(f) \) is the gate output, \( \sigma \) is the sigmoid activation function, \( W_g \) and \( b_g \) are the weight matrix and bias of the linear transformation, and \( f \) represents the input feature vector \([\text{num\_cells}, \text{cell\_density}, \text{mean\_cell\_area}]\).
+
+The output of the gate is then used to modulate \( x \) via an element-wise operation:
+
+\begin{verbatim}
+x = x * gate
+\end{verbatim}
+
+which corresponds to the mathematical operation:
+
+\[
+X' = X \odot G(f)
+\]
+
+where \( X' \) is the modulated feature tensor, \( X \) is the original input tensor, and \( \odot \) denotes element-wise multiplication.
+
+Regarding its implications within the store buffer, when the forward method is invoked with \texttt{cellpose\_feats} as input, the tensor \( x \) is modulated by the gating mechanism. The gated features are then used to compute the final predictions. Depending on the outcome (after applying a sigmoid function to part of the results), a decision is made on whether to store certain features in the buffer. Essentially, the gating mechanism enables the model to emphasize or down-weight specific characteristics relevant to the task before selecting which features to store in the buffer for inference.
+
+This gating mechanism introduces a modulation process that allows external information (cellpose features) to be seamlessly integrated into feature extraction, ultimately influencing the selection of stored features for downstream inference.
+
 
 \subsection{Implementation}
 
@@ -246,26 +309,21 @@ b = W_b G^T V_h
 where $G$ is computed using mean or max aggregation.
 \end{enumerate}
 
-\begin{figure}[!htb]
-\centering
-\includegraphics[width=\linewidth, height=6cm]{images/custom_arch.png}
-\caption{Our architecture} 
-\label{custom_buffermil_arc}
-\end{figure}
 
 \section{Experiments and Results} \label{results}
 
 \begin{table*}[h]
 \centering
-\caption{Performance comparison between our custom model and the original BufferMIL on CAMELYON16 and TCGA datasets. Metrics are reported as mean ± standard deviation.}
+\caption{Performance comparison between our custom model and the original BufferMIL on CAMELYON16 and TCGA LUAD (lung) datasets. Metrics are reported as mean ± standard deviation.}
 \label{tab:performance_comparison}
 \begin{tabular}{lcc|cc}
 \hline
 \multirow{2}{*}{\textbf{Model}} & \multicolumn{2}{c|}{\textbf{CAMELYON16}} & \multicolumn{2}{c}{\textbf{TCGA}} \\ 
  & \textbf{Accuracy} & \textbf{AUC} & \textbf{Accuracy} & \textbf{AUC} \\ 
 \hline
-Our & $0.85185 \pm 0.010$ & $0.91209 \pm 0.008$ & $0.80654 \pm 0.011$ & $0.83345 \pm 0.009$ \\ 
-BufferMIL & $\mathbf{0.89} \pm 0.012$ & $\mathbf{0.92857} \pm 0.006$ & $\mathbf{0.84989} \pm 0.013$ & $\mathbf{0.85643} \pm 0.007$ \\ 
+Feature Injection & $0.89785 \pm 0.010$ & $0.90209 \pm 0.012$ & $0.82606 \pm 0.016$ & $0.80345 \pm 0.010$ \\ 
+Feature Gating & $0.84341 \pm 0.013$ & $0.87709 \pm 0.012$ & $0.82654 \pm 0.011$ & $0.83345 \pm 0.009$ \\ 
+BufferMIL & $\mathbf{0.92248} \pm 0.09$ & $\mathbf{0.91645} \pm 0.02$ & $\mathbf{0.85989} \pm 0.013$ & $\mathbf{0.86643} \pm 0.007$ \\ 
 \hline
 \end{tabular}
 \end{table*}
@@ -287,19 +345,19 @@ We performed a great number of tests to find the best mix of inputs and hyperpar
 \item{Using different number of critical patches}
 \end{itemize}
 
-The result in which we got the best performance out of our architecture was achieved using three inputs: CYTO3 for Cellpose model, MEAN buffer aggregation and select 10 critical patches to store in the buffer. 
+The result in which we got the best performance out of our architecture was achieved using three inputs: "cyto3" for Cellpose model, "mean" buffer aggregation and select "10" critical patches to store in the buffer, with "10" ephocs buffer frequency update.
 
 
-As shown in Table~\ref{tab:performance_comparison}, the original BufferMIL model consistently outperforms our custom model across both CAMELYON16 and TCGA datasets. 
+As shown in Table~\ref{tab:performance_comparison}, the original BufferMIL model consistently outperforms our custom models across both CAMELYON16 and TCGA datasets. 
 
 \begin{itemize}
-\item\textit{CAMELYON16:} BufferMIL achieves an accuracy of $0.89 \pm 0.012$ and an AUC of $0.92857 \pm 0.006$, while our custom model reaches $0.85185 \pm 0.010$ in accuracy and $0.91209 \pm 0.008$ in AUC.  
-\item\textit{TCGA:} BufferMIL obtains an accuracy of $0.84989 \pm 0.013$ and an AUC of $0.85643 \pm 0.007$, compared to $0.80654 \pm 0.011$ in accuracy and $0.83345 \pm 0.009$ in AUC for our custom model.
+\item\textit{CAMELYON16:} BufferMIL achieves an accuracy of $0.92 \pm 0.09$ and an AUC of $0.91 \pm 0.02$, while our custom model reaches $0.89 \pm 0.01$ in accuracy and $0.90 \pm 0.012$ in AUC.  
+\item\textit{TCGA:} BufferMIL obtains an accuracy of $0.85 \pm 0.013$ and an AUC of $0.86 \pm 0.007$, compared to $0.82 \pm 0.09$ in accuracy and $0.83 \pm 0.011$ in AUC for our custom model.
 \end{itemize}
 
-These results highlight the robustness of BufferMIL’s architecture, particularly in effectively capturing relevant features from the dataset. Despite this, our custom model remains competitive, with only a marginal decrease in performance. This suggests that further optimization, such as fine-tuning hyperparameters, exploring advanced aggregation techniques, or integrating additional contextual features, could narrow the gap in performance.
+These results highlight the robustness of BufferMIL’s architecture, particularly in effectively capturing relevant features from the dataset. Despite this, our custom models remains competitive, with only a marginal decrease in performance. This suggests that further optimization, such as fine-tuning hyperparameters, exploring advanced aggregation techniques, or integrating additional contextual features, could narrow the gap in performance.
 
-Moreover, while BufferMIL shows superior performance, our custom model may offer advantages in terms of computational efficiency or adaptability to specific tasks, which can be further explored in future work.
+Moreover, while BufferMIL shows superior performance, our custom models may offer advantages in terms of computational efficiency or adaptability to specific tasks, which can be further explored in future work.
 
 
 In our best results, we trained for 200 epochs using an ADAM optimizer. The learning rate was set to 0.001 and halved after 10 epochs. Another important detail is that in the original architecture the classifier was trained using BCEWithLogitsLoss (like in the original BufferMIL), this loss combines a Sigmoid layer and the BCELoss in one single class. This version is more numerically stable than using a plain Sigmoid followed by a BCELoss as, by combining the operations into one layer, we take advantage of the log-sum-exp trick for numerical stability.
@@ -325,7 +383,9 @@ where \( N \) is the batch size. If the reduction is not \texttt{none} (default 
 This is used for measuring the error of a reconstruction, for example in an autoencoder. Note that the targets \( t[i] \) should be numbers between 0 and 1.
 
 
-The model learned really well the distribution of the input training set, reaching a train accuracy as high as 0.95, the features learned from the training set are indeed well representative of our classification task, but this is not true when it comes to generalization, as our performance drops in the inference scenario. Moreover, we observe that, due to the scarcity of available data and the complexity of the disease, detecting cancer in hystopatological images seems to be a difficult case to study, as the performance results are consistently worse if methods are applied to this scenario.
+
+
+The model learned really well the distribution of the input training set, reaching a train accuracy as high as 0.93, the features learned from the training set are indeed well representative of our classification task, but this is not true when it comes to generalization, as our performance drops in the inference scenario. Moreover, we observe that, due to the scarcity of available data and the complexity of the disease, detecting cancer in hystopatological images seems to be a difficult case to study, as the performance results are consistently worse if methods are applied to this scenario.
 
 
 \section{Conclusions} \label{conclusions}
@@ -350,5 +410,34 @@ Ultimately, our work lays the groundwork for future research in MIL data integra
 
 \bibliographystyle{unsrt}
 \bibliography{references}
+
+\onecolumn
+\newpage
+
+\appendix
+\section{Additional Plots}
+
+Here we provide additional visualizations supporting our analysis.
+
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=0.8\textwidth, height=10cm]{images/comparison_mean_ntop_buffermil.png}
+    \caption{How our custom model (feature injection) works with different buffer aggregation techniques and different number of selected patches.}
+    \label{fig:comparison_mean_ntop}
+\end{figure}
+
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[width=0.8\textwidth, height=10cm]{images/comparison_ntop_bufffreq.png}
+    \caption{How our custom model (feature injection) works with different number of selected patches and the buffer update frequency.}
+    \label{fig:comaprison_ntop_buffreq}
+\end{figure}
+
+\begin{figure}[!tb]
+    \centering
+    \includegraphics[width=0.8\textwidth, height=10cm]{images/comparison_between_all.png}
+    \caption{Original BufferMIL vs Feature injection vs Feature gating.}
+    \label{fig:comaprison_ntop_buffreq}
+\end{figure}
 
 \end{document}
