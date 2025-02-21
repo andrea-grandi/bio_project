@@ -141,18 +141,19 @@ def run_inference(model, test_loader):
 
 
 def inference():  
-  test_dataset = CustomDataset(data_root, "train")
+  test_dataset = CustomDataset(data_root, "test")
   test_loader = DataLoader(test_dataset, batch_size=1, shuffle=False)
-
+  
+  """
   for i in test_loader:
     print(i)
     break
-
+  """
   args = get_args()
 
   model = selectModel(args)
   model.kl = None
-  model.load_state_dict(torch.load(args.checkpoint, map_location=torch.device('cpu')))
+  model.load_state_dict(torch.load(args.checkpoint, map_location=torch.device(device)))
   model.to(device)
 
   predictions, labels = run_inference(model, test_loader)
