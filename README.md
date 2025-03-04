@@ -24,8 +24,6 @@ conda activate bio
 conda env update --file environment.yml
 ```
 
-## Training Process
-
 ### Dataset
 Camelyon16/TCGA
 
@@ -58,13 +56,18 @@ After the .h5 coordinate generation, use:
 | Buffer rate  | 10 |
 | Buffer aggregate | Mean |
 
-### 7. Figures
+### Training
+
+To train the model, run the following command:
+```bash
+python src/bio_project/train.py --config config.yaml
+```
+
+## Results
 Include visual results from different stages:
 - Sample WSI patches before/after preprocessing
 - Feature extraction outputs (e.g., t-SNE visualization)
 - Training loss and accuracy curves
-
-## Figures
 
 ### 1. Sample Extracted Patches
 | Original WSI | Extracted Patches |
