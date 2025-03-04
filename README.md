@@ -27,7 +27,7 @@ conda env update --file environment.yml
 ## Training Process
 
 ### Dataset
-- Name: Camelyon16/TCGA
+Camelyon16/TCGA
 
 ### Data Preprocessing
 This work uses [CLAM](https://github.com/mahmoodlab/CLAM) to filter out background patches. 
@@ -54,7 +54,6 @@ After the .h5 coordinate generation, use:
 | Optimizer    | Adam / SGD |
 | Loss Function | BCEWithLogitsLoss |
 | Epochs       | 200 |
-| Batch Size   | 32 |
 | Buffer size  | 10 |
 | Buffer rate  | 10 |
 | Buffer aggregate | Mean |
