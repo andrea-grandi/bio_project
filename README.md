@@ -26,6 +26,10 @@ Before running inference, ensure that:
 - Pretrained Weights: [Pretrained Checkpoints Used]
 - Input size: `[256 x 256]`
 
+### Proposed Architectures
+![First](presentation/images/custom_arch_V1.png)
+![Second](presentation/images/custom_arch_V2.png)
+
 ### Hyperparameters
 | Parameter      | Value |
 |--------------|-------|
@@ -56,6 +60,7 @@ Include visual results from different stages:
 
 ### 3. Training Loss and Accuracy Curves
 ![Training Curves](presentation/images/loss.png)
+![Example](presentation/images/comparison_between_all.png)
 
 
 ## Credits
