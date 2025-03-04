@@ -14,26 +14,29 @@ The visual examination of histopathological images is a cornerstone of cancer di
 Before running inference, ensure that:
 - The project dependencies are installed (`requirements.txt` or `environment.yml`)
 - You have the necessary pretrained weights for feature extraction
-- Whole Slide Images (WSI) are placed in the correct input directory
+- Whole Slide Image (WSI) is placed in the correct input directory (PATH_TO_INPUT_SLIDE)
 
 ## Training Process
 
 ### Dataset
-- Name: [Camelyon16]
-- Number of slides: [300]
+- Name: Camelyon16/TCGA
 
 ### Model
-- Architecture: [DINO / Transformer / MIL-based Model]
+- Architecture: [CellPose / DINO / BufferMIL]
 - Pretrained Weights: [Pretrained Checkpoints Used]
 - Input size: `[256 x 256]`
 
 ### Hyperparameters
 | Parameter      | Value |
 |--------------|-------|
-| Learning Rate | [0.001] |
-| Optimizer    | [Adam / SGD] |
-| Loss Function | [BCEWithLogitsLoss] |
-| Epochs       | [200] |
+| Learning Rate | 0.001 |
+| Optimizer    | Adam / SGD |
+| Loss Function | BCEWithLogitsLoss |
+| Epochs       | 200 |
+| Batch Size   | 32 |
+| Buffer size  | 10 |
+| Buffer rate  | 10 |
+| Buffer aggregate | Mean |
 
 ### 7. Figures
 Include visual results from different stages:
@@ -46,63 +49,14 @@ Include visual results from different stages:
 ### 1. Sample Extracted Patches
 | Original WSI | Extracted Patches |
 |-------------|-----------------|
-| ![WSI Example](path_to_example_wsi) | ![Patches Example](path_to_example_patches) |
+| ![WSI Example](src/bio_project/inference/output_clam/masks/slide_404.jpg) | ![Patches Example](src/bio_project/inference/output_clam/images/tumor_048_tumor/0/_x_18240_y_192000.jpg) |
 
-### 2. Feature Extraction t-SNE Visualization
-![t-SNE Visualization](path_to_tsne_plot)
+### 2. CellPose
+![Cellpose](presentation/images/cellpose_example_3.png)
 
 ### 3. Training Loss and Accuracy Curves
-![Training Curves](path_to_training_curves)
+![Training Curves](presentation/images/loss.png)
 
-## Inference
-
-### 1. Run the Inference Script
-To start the inference process, execute the following command:
-```bash
-python src/bio_project/main.py \
-  --source_dir PATH_TO_INPUT_SLIDE \
-  --save_dir PATH_TO_OUTPUT_CLAM \
-  --preset PATH_TO_PRESETS \
-  --patch_size PATCH_SIZE
-```
-This extracts patches from WSIs using the CLAM preset.
-
-### 2. Convert Extracted Patches to JPG
-```bash
-python src/bio_project/main.py \
-  --output_dir PATH_TO_OUTPUT_CLAM \
-  --csv_file PATH_TO_CSV_FILE \
-  --slide_ext SLIDE_EXTENSION
-```
-This step converts HDF5 patches into JPEG images for easier visualization.
-
-### 3. Sort Image Hierarchy
-```bash
-python src/bio_project/main.py \
-  --sourcex20 PATH_TO_SOURCE_IMAGES \
-  --dest PATH_TO_SORTED_OUTPUT
-```
-This organizes the extracted patches into a structured hierarchy.
-
-### 4. Extract Features Using DINO
-```bash
-python src/bio_project/main.py \
-  --extractedpatchespath PATH_TO_EXTRACTED_PATCHES \
-  --savepath PATH_TO_FEATURES_OUTPUT \
-  --pretrained_weights1 PATH_TO_PRETRAINED_WEIGHTS_20X \
-  --pretrained_weights2 PATH_TO_PRETRAINED_WEIGHTS_10X \
-  --pretrained_weights3 PATH_TO_PRETRAINED_WEIGHTS_5X \
-  --propertiescsv PATH_TO_PROPERTIES_CSV
-```
-This extracts visual features from the patches using pretrained DINO models.
-
-### 5. Prepare Final Dataset
-```bash
-python src/bio_project/main.py \
-  --source_feats PATH_TO_FEATURES_FOLDER \
-  --dest_feats PATH_TO_FINAL_EMBEDDINGS
-```
-This step aggregates the extracted features into the final dataset for model inference.
 
 ## Credits
 
