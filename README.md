@@ -16,10 +16,27 @@ Before running inference, ensure that:
 - You have the necessary pretrained weights for feature extraction
 - Whole Slide Image (WSI) is placed in the correct input directory (PATH_TO_INPUT_SLIDE)
 
+## Installation
+To install the required dependencies, run the following command:
+```bash
+conda create -n bio python=3.10
+conda activate bio
+conda env update --file environment.yml
+```
+
 ## Training Process
 
 ### Dataset
 - Name: Camelyon16/TCGA
+
+### Data Preprocessing
+This work uses [CLAM](https://github.com/mahmoodlab/CLAM) to filter out background patches. 
+After the .h5 coordinate generation, use:
+
+- [H5 to JPG](src/bio_project/preprocessing/convert_h5_to_jpg.py): to convert the .h5 files to .jpg
+- [Sort Images](src/bio_project/preprocessing/sort_hierarchy.py): to sort the images in the correct folders
+- [Dino Training](https://github.com/facebookresearch/dino): given the patches, train dino with the `vit_small` option
+- [Feature Extraction](src/bio_project/feature_extraction.py): it extracts patch features and adjacency matrices
 
 ### Model
 - Architecture: [CellPose](https://github.com/MouseLand/cellpose) | [DINO](https://github.com/facebookresearch/dino) | [BufferMIL](https://github.com/aimagelab/mil4wsi)
