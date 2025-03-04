@@ -16,6 +16,44 @@ Before running inference, ensure that:
 - You have the necessary pretrained weights for feature extraction
 - Whole Slide Images (WSI) are placed in the correct input directory
 
+## Training Process
+
+### Dataset
+- Name: [Camelyon16]
+- Number of slides: [300]
+
+### Model
+- Architecture: [DINO / Transformer / MIL-based Model]
+- Pretrained Weights: [Pretrained Checkpoints Used]
+- Input size: `[256 x 256]`
+
+### Hyperparameters
+| Parameter      | Value |
+|--------------|-------|
+| Learning Rate | [0.001] |
+| Optimizer    | [Adam / SGD] |
+| Loss Function | [BCEWithLogitsLoss] |
+| Epochs       | [200] |
+
+### 7. Figures
+Include visual results from different stages:
+- Sample WSI patches before/after preprocessing
+- Feature extraction outputs (e.g., t-SNE visualization)
+- Training loss and accuracy curves
+
+## Figures
+
+### 1. Sample Extracted Patches
+| Original WSI | Extracted Patches |
+|-------------|-----------------|
+| ![WSI Example](path_to_example_wsi) | ![Patches Example](path_to_example_patches) |
+
+### 2. Feature Extraction t-SNE Visualization
+![t-SNE Visualization](path_to_tsne_plot)
+
+### 3. Training Loss and Accuracy Curves
+![Training Curves](path_to_training_curves)
+
 ## Inference
 
 ### 1. Run the Inference Script
