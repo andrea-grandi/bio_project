@@ -22,7 +22,7 @@ Before running inference, ensure that:
 - Name: Camelyon16/TCGA
 
 ### Model
-- Architecture: [CellPose / DINO / BufferMIL]
+- Architecture: [CellPose](https://github.com/MouseLand/cellpose) | [DINO](https://github.com/facebookresearch/dino) | [BufferMIL](https://github.com/aimagelab/mil4wsi)
 - Pretrained Weights: [Pretrained Checkpoints Used](https://ailb-web.ing.unimore.it/publicfiles/miccai_dasmil_checkpoints/dasmil/camelyon16/dino/x20/checkpoint.pth.gz)
 - Input size: `[256 x 256]`
 
