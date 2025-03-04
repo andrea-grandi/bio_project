@@ -23,7 +23,7 @@ Before running inference, ensure that:
 
 ### Model
 - Architecture: [CellPose / DINO / BufferMIL]
-- Pretrained Weights: [Pretrained Checkpoints Used]
+- Pretrained Weights: [Pretrained Checkpoints Used](https://ailb-web.ing.unimore.it/publicfiles/miccai_dasmil_checkpoints/dasmil/camelyon16/dino/x20/checkpoint.pth.gz)
 - Input size: `[256 x 256]`
 
 ### Proposed Architectures
