@@ -14,7 +14,7 @@ python main.py --datasetpath DATASETPATH
 
 ## Inference
 
-For running inference put the slide in the `inference/input_slide` directory and run the following command:
+For running inference put the slide in the `inference/input_slide` directory, setup the `config.yaml` file and run the following command:
 
 ```bash
 python inference.py --config config.yaml
