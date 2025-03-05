@@ -1,0 +1,28 @@
+# config.yaml
+
+# Args for CLAM preprocessing
+source_dir: "/Users/andreagrandi/Developer/bio_project/src/bio_project/inference/input_slide"
+save_dir: "/Users/andreagrandi/Developer/bio_project/src/bio_project/inference/output_clam"
+preset: "/Users/andreagrandi/Developer/bio_project/src/bio_project/preprocessing/CLAM/presets/bwh_biopsy.csv"
+patch_size: 256
+
+# Args for converting h5 to jpg
+output_dir: "/Users/andreagrandi/Developer/bio_project/src/bio_project/inference/output_clam"
+csv_file: "/Users/andreagrandi/Developer/bio_project/src/bio_project/inference/output_clam/process_list_autogen.csv"
+slide_ext: ".tif"
+
+# Args for sorting hierarchy
+sourcex20: "/Users/andreagrandi/Developer/bio_project/src/bio_project/inference/output_clam/images"
+dest: "/Users/andreagrandi/Developer/bio_project/src/bio_project/inference/output_clam_sorted"
+
+# Args for feature extraction
+extractedpatchespath: "/Users/andreagrandi/Developer/bio_project/src/bio_project/inference/output_clam_sorted"
+savepath: "/Users/andreagrandi/Developer/bio_project/src/bio_project/inference/output_feats"
+pretrained_weights1: "/Users/andreagrandi/Developer/bio_project/src/bio_project/weights/dino_camelyon16/checkpoint_20x.pth"
+pretrained_weights2: "/Users/andreagrandi/Developer/bio_project/src/bio_project/weights/dino_camelyon16/checkpoint_10x.pth"
+pretrained_weights3: "/Users/andreagrandi/Developer/bio_project/src/bio_project/weights/dino_camelyon16/checkpoint_5x.pth"
+propertiescsv: "/Users/andreagrandi/Developer/bio_project/src/bio_project/inference/cam_multi.csv"
+
+# Args for preparing dataset
+source_feats: "/Users/andreagrandi/Developer/bio_project/src/bio_project/inference/output_feats"
+dest_feats: "/Users/andreagrandi/Developer/bio_project/src/bio_project/inference/final_embeddings"

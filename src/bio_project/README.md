@@ -9,5 +9,5 @@
 ## Traning
 To train the model, run the following command:
 ```bash
-python train.py --datasetpath DATASETPATH
+python main.py --datasetpath DATASETPATH
 ```

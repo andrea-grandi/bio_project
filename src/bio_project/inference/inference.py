@@ -14,6 +14,9 @@ import time
 import tqdm
 import pandas as pd
 
+#parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+#sys.path.append(parent_dir)
+
 from utils.test import test
 from models import selectModel
 

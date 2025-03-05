@@ -1,0 +1,4 @@
+submitit INFO (2025-03-05 16:42:39,267) - Starting with JobEnvironment(job_id=40949, hostname=MacBook-Pro-di-Andrea.local, local_rank=0(1), node=0(1), global_rank=0(1))
+submitit INFO (2025-03-05 16:42:39,267) - Loading pickle: /Users/andreagrandi/Developer/bio_project/src/bio_project/LOGFOLDER/40949/40949_submitted.pkl
+submitit INFO (2025-03-05 16:42:39,268) - Job completed successfully
+submitit INFO (2025-03-05 16:42:39,269) - Exiting after successful completion
