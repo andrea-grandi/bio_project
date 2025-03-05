@@ -2,13 +2,13 @@ import argparse
 
 
 def get_args():
-    parser = argparse.ArgumentParser(description='TRAIN DASMIL')
+    parser = argparse.ArgumentParser(description='TRAIN MODEL')
 
     # Optimization arguments
     group1 = parser.add_argument_group("optimization")
-    group1.add_argument('--lr', default=0.0002,
+    group1.add_argument('--lr', default=0.001,
                         type=float, help='learning rate')
-    group1.add_argument('--weight_decay', default=0.005,
+    group1.add_argument('--weight_decay', default=0.001,
                         type=float, help='Weight decay [5e-3]')
 
     # GNN arguments

@@ -19,6 +19,13 @@ features with nuclei-level numerical attributes, such as cell density and morpho
 These enriched features are then fed into a modified BufferMIL model for WSI classification. We evaluate our method on detecting lymph node metastases 
 (CAMELYON16 and TCGA lung).
 
+## Folder Structure
+- `src/`: contains the source code for the project
+- `presentation/`: contains the presentation slides and images
+- `notebooks/`: contains the Jupyter notebooks for this project
+- `reports/`: contains the project paper
+- `references/`: contains the references
+
 ## Prerequisites
 Before running, ensure that:
 - The project dependencies are installed (`requirements.txt` or `environment.yml`)
