@@ -74,10 +74,7 @@ After the .h5 coordinate generation, use:
 
 ### Training
 
-To train the model, run the following command:
-```bash
-python src/bio_project/train.py --datasetpath DATASETPATH
-```
+For training and inference look at `src/bio_project` and `src/bio_project/inference` folders.
 
 ## Results
 Include visual results from different stages:
