@@ -1,0 +1,4 @@
+# config_train.yaml
+
+# data root for embeddings
+data_root="/Users/andreagrandi/Developer/bio_project/src/bio_project/feature_extraction/final_embeddings_v3/processed"

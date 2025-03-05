@@ -1,4 +1,4 @@
-# config.yaml
+# config_inference.yaml
 
 # Args for CLAM preprocessing
 source_dir: "/Users/andreagrandi/Developer/bio_project/src/bio_project/inference/input_slide"

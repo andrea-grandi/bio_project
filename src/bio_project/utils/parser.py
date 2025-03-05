@@ -57,7 +57,7 @@ def get_args():
     group6.add_argument('--checkpoint', default=None,type=str, help='checkpoint')
 
     parser.add_argument('--tag', default="split", type=str, help='train strategy')
-    parser.add_argument('--modeltype', default="DASMIL", type=str, help='train strategy')
+    parser.add_argument('--modeltype', default="CustomBuffermil", type=str, help='train strategy')
     parser.add_argument('--project', default="decider-geom", type=str, help='project name for wandb')
     parser.add_argument('--model', default="decider-geom", type=str, help='project name for wandb')
     parser.add_argument('--wandbname', default="main", type=str, help='project name for wandb')
