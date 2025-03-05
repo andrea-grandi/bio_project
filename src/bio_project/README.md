@@ -11,3 +11,13 @@ To train the model, run the following command:
 ```bash
 python main.py --datasetpath DATASETPATH
 ```
+
+# Inference
+
+For running inference put the slide in the `inference/input_slide` directory and run the following command:
+
+```bash
+python inference.py --config config.yaml
+```
+
+All the args needs to be passed in the `config.yaml` file.
