@@ -67,7 +67,7 @@ def train_model(model, dataloader, criterion, optimizer, device, num_epochs=25):
 
             # Forward pass
             optimizer.zero_grad()
-            outputs = model(features, None, None, None)  # Adatta se usi edge_index o altri input
+            outputs = model(features, None, None, None) 
             loss = criterion(outputs["higher"], labels)
 
             # Backward pass and optimization
@@ -98,7 +98,7 @@ if __name__ == "__main__":
 
     args = {
         "bufferaggregate": "mean",
-        "buffer_freq": 5,
+        "buffer_freq": 10,
         "randomstore": False,
         "ntop": 10
     }

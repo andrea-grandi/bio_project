@@ -20,7 +20,7 @@ These enriched features are then fed into a modified BufferMIL model for WSI cla
 (CAMELYON16 and TCGA lung).
 
 ## Prerequisites
-Before running inference, ensure that:
+Before running, ensure that:
 - The project dependencies are installed (`requirements.txt` or `environment.yml`)
 - You have the necessary pretrained weights for feature extraction
 - Whole Slide Image (WSI) is placed in the correct input directory (PATH_TO_INPUT_SLIDE)
@@ -46,7 +46,7 @@ After the .h5 coordinate generation, use:
 - [Feature Extraction](src/bio_project/feature_extraction.py): it extracts patch features and adjacency matrices
 
 ### Model
-- Architecture: [CellPose](https://github.com/MouseLand/cellpose) | [DINO](https://github.com/facebookresearch/dino) | [BufferMIL](https://github.com/aimagelab/mil4wsi)
+- Architectures: [CellPose](https://github.com/MouseLand/cellpose) | [DINO](https://github.com/facebookresearch/dino) | [BufferMIL](https://github.com/aimagelab/mil4wsi)
 - Pretrained Weights: [Pretrained Checkpoints Used](https://ailb-web.ing.unimore.it/publicfiles/miccai_dasmil_checkpoints/dasmil/camelyon16/dino/x20/checkpoint.pth.gz)
 - Input size: `[256 x 256]`
 
@@ -58,7 +58,7 @@ After the .h5 coordinate generation, use:
 | Parameter      | Value |
 |--------------|-------|
 | Learning Rate | 0.001 |
-| Optimizer    | Adam / SGD |
+| Optimizer    | Adam |
 | Loss Function | BCEWithLogitsLoss |
 | Epochs       | 200 |
 | Buffer size  | 10 |
@@ -69,13 +69,13 @@ After the .h5 coordinate generation, use:
 
 To train the model, run the following command:
 ```bash
-python src/bio_project/train.py --config config.yaml
+python src/bio_project/train.py --datasetpath DATASETPATH
 ```
 
 ## Results
 Include visual results from different stages:
 - Sample WSI patches before/after preprocessing
-- Feature extraction outputs (e.g., t-SNE visualization)
+- Feature extraction outputs
 - Training loss and accuracy curves
 
 ### 1. Sample Extracted Patches
