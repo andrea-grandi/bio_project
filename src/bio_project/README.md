@@ -22,4 +22,4 @@ For running inference put the slide in the `inference/input_slide` directory, se
 python inference.py --config config_inference.yaml
 ```
 
-All the args needs to be passed in the `config.yaml` file.
+All the args needs to be passed in the `config_train.yaml` and `config_inference.yaml` files.
