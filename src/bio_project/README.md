@@ -6,7 +6,7 @@
 - `features_extraction/`: contains the code for extracting the features
 - `inference/`: contains the code for the inference
 
-## Traning
+## Training
 
 To train the model, setup the `config_train.yaml` file and run the following command:
 
