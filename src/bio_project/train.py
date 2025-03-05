@@ -17,7 +17,6 @@ def main():
     # Get command line arguments
     args = get_args()
     
-    """
     executor = submitit.AutoExecutor(folder=args.logfolder, slurm_max_num_timeout=30)
     executor.update_parameters(
             mem_gb=args.mem,
@@ -35,8 +34,8 @@ def main():
     experiments=experiments+launch_buffermil(args)
     
     executor.map_array(processDataset,experiments)
-    """
-    processDataset(experiments[0])
+    
+    #processDataset(experiments[0])
 
 if __name__ == '__main__':
     main()

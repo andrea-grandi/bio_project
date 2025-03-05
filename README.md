@@ -72,7 +72,7 @@ After the .h5 coordinate generation, use:
 | Buffer rate  | 10 |
 | Buffer aggregate | Mean |
 
-### Training
+### Training and Inference
 
 For training and inference look at `src/bio_project` and `src/bio_project/inference` folders.
 

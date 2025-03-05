@@ -6,13 +6,13 @@ import numpy as np
 import gc
 import random
 
-from inference.preprocess_wsi import preprocess_wsi
-from inference.convert_h5_to_jpg import convert_h5_to_jpg
-from inference.sort_hierarchy import sort_hierarchy
-from inference.feature_extraction import feature_extraction
-from inference.create_csv import create_csv
-from inference.prepare_dataset import prepare_dataset
-from inference.inference import inference
+from preprocess_wsi import preprocess_wsi
+from convert_h5_to_jpg import convert_h5_to_jpg
+from sort_hierarchy import sort_hierarchy
+from feature_extraction import feature_extraction
+from create_csv import create_csv
+from prepare_dataset import prepare_dataset
+from inference import inference
 
 def set_seed(seed: int = 42) -> None:
   random.seed(seed)

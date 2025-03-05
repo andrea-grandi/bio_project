@@ -44,10 +44,10 @@ def process(bag_candidate_idx, args):
     output_path_slide = os.path.join(output_path, slide_id)
     time_start = time.time()
     wsi = openslide.open_slide(slide_file_path)
-    save_patches(h5_file_path, output_path=output_path_slide, wsi=wsi, target_patch_size=args.target_patch_size, max_patches=100)
+    save_patches(h5_file_path, output_path=output_path_slide, wsi=wsi, target_patch_size=args.target_patch_size, max_patches=None)
     time_stop = time.time()
 
-def save_patches(file_path, output_path, wsi, target_patch_size, max_patches=100, batch_size=160):
+def save_patches(file_path, output_path, wsi, target_patch_size, max_patches=None, batch_size=160):
     """
     Function to save patches from a bag (.h5 file) and store them as images.
 
@@ -72,13 +72,17 @@ def save_patches(file_path, output_path, wsi, target_patch_size, max_patches=100
     output_path = os.path.join(output_path, str(level))
     os.makedirs(output_path, exist_ok=True)
     print("tot: " + str(len(dataset)))
+    
 
-    # Randomly select a subset of patches
-    total_patches = len(dataset)
-    if total_patches > max_patches:
-        selected_indices = random.sample(range(total_patches), max_patches)
-    else:
-        selected_indices = range(total_patches)
+    # Select a subset of patches if max_patches is defined
+    # Only for testing purposes
+    if max_patches is not None:
+        # Randomly select a subset of patches
+        total_patches = len(dataset)
+        if total_patches > max_patches:
+            selected_indices = random.sample(range(total_patches), max_patches)
+        else:
+            selected_indices = range(total_patches)
 
     # Iterate over selected patches and save them as images
     for idx in selected_indices:
